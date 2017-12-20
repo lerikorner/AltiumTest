@@ -17,9 +17,10 @@ namespace AltiumTest
             StreamWriter sw = new StreamWriter(aFile);
             aFile.Seek(0, SeekOrigin.End);
             Random rnd = new Random();
+            Random rnd2 = new Random();
             for (int i = 0; i < 1000; i++)
             {
-                sw.WriteLine(AltiumTest.KeyGenerator.GetUniqueKey(rnd.Next(0,1024)));
+                sw.WriteLine(rnd2.Next(0, int.MaxValue).ToString()+"."+ AltiumTest.KeyGenerator.GetUniqueKey(rnd.Next(0,1024)));
             }
             sw.Close();
         }
