@@ -10,7 +10,7 @@ namespace AltiumTest
     {
         static void Main(string[] args)
         {
-            /*int CodeRandom, DescriptionRandom;
+            int CodeRandom, DescriptionRandom;
             string fileName = "c:\\temp\\out_small.txt";
             FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
             StreamWriter sw = new StreamWriter(aFile);
@@ -18,24 +18,29 @@ namespace AltiumTest
             Random rndCode = new Random();
             Random rndDescription = new Random();
             string copier = "";
+            Int32 dubcode=0;
             for (int i = 0; i < 100; i++)
             {
                 CodeRandom=rndCode.Next(0, int.MaxValue);
-                DescriptionRandom = rndDescription.Next(0, 3);
-                if (CodeRandom % (DescriptionRandom + 1) != 0)
+                DescriptionRandom = rndDescription.Next(0, 10);
+                Random rnd3 = new Random();
+                if (CodeRandom % (DescriptionRandom + 1) == 0)
                 {
-                    sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKey(DescriptionRandom));
-                    copier = AltiumTest.KeyGenerator.GetUniqueKey(DescriptionRandom);
+                    sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3));
+                    copier = AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3);
+                }
+                else
+                if (CodeRandom % (DescriptionRandom + 1) == 1)
+                {
+                    sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3));
+                    dubcode = CodeRandom;                
                 }
                 else
                 {
-                    sw.WriteLine(CodeRandom.ToString() + "." + copier);
+                    sw.WriteLine(dubcode.ToString() + "." + copier);
                 }
             }
-            sw.Close();*/
-
-            
-            string fileName = "c:\\temp\\out_small.txt";
+            sw.Close();          
 
             //считываем все строки файла в массив
             string[] stringBuf = File.ReadAllLines(fileName);
@@ -55,15 +60,15 @@ namespace AltiumTest
 
             //пишем сортированные данные в файл
             fileName = "c:\\temp\\out_small_sorted.txt";
-            FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
-            StreamWriter sw = new StreamWriter(aFile);
-            aFile.Seek(0, SeekOrigin.End);
+            FileStream fileRandom = new FileStream(fileName, FileMode.OpenOrCreate);
+            StreamWriter swRandom = new StreamWriter(fileRandom);
+            fileRandom.Seek(0, SeekOrigin.End);
 
             foreach (TextRecord trs in TRsorted)
             {
-                sw.WriteLine(trs.ToString());
+                swRandom.WriteLine(trs.ToString());
             }
-            sw.Close();
+            swRandom.Close();
         }
     }
 }

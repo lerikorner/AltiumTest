@@ -11,7 +11,7 @@ namespace AltiumTest
         public string Description { get; set; }
         public override string ToString()
         {
-            return Code + "." + Description;
+            return Code + Description;
         }
         public override bool Equals(object obj)
         {
