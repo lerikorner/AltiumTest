@@ -23,7 +23,7 @@ namespace AltiumTest
             for (int i = 0; i < 1000000; i++)
             {
                 CodeRandom=rndCode.Next(0, int.MaxValue);
-                DescriptionRandom = rndDescription.Next(0, 10);
+                DescriptionRandom = rndDescription.Next(0, 1024);
                 Random rnd3 = new Random();
                 if (CodeRandom % (DescriptionRandom + 1) != 0)
                 {
