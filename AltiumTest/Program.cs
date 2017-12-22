@@ -21,20 +21,20 @@ namespace AltiumTest
             Random rndDescription = new Random();
             string copier = "";
             Int32 dubcode=0;
-            for (int i = 0; i < 10000; i++)
+            for (int i = 0; i < 1000000; i++)
             {
                 CodeRandom=rndCode.Next(0, int.MaxValue);
                 DescriptionRandom = rndDescription.Next(0, 10);
                 Random rnd3 = new Random();
-                if (CodeRandom % (DescriptionRandom + 1) == 0)
+                if (CodeRandom % (DescriptionRandom + 1) != 0)
                 {
                     sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3));
                     copier = AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3);
                 }
                 else
-                if (CodeRandom % (DescriptionRandom + 1) == 1)
+                if (CodeRandom % (DescriptionRandom + 1) != 5)
                 {
-                    sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3));
+                    sw.WriteLine(CodeRandom.ToString() + "." + copier);
                     dubcode = CodeRandom;                
                 }
                 else
