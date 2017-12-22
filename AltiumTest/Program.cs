@@ -10,6 +10,8 @@ namespace AltiumTest
     {
         static void Main(string[] args)
         {
+            var sWatch = System.Diagnostics.Stopwatch.StartNew();
+            
             int CodeRandom, DescriptionRandom;
             string fileName = "c:\\temp\\out_small.txt";
             FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
@@ -69,6 +71,10 @@ namespace AltiumTest
                 swRandom.WriteLine(trs.ToString());
             }
             swRandom.Close();
+
+            sWatch.Stop();
+            Console.WriteLine("затрачено времени:{0}", sWatch.Elapsed);
+            Console.ReadKey();
         }
     }
 }
