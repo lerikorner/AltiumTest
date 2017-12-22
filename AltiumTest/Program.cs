@@ -8,10 +8,8 @@ namespace AltiumTest
 {
     class Program
     {
-        static void Main(string[] args)
-        {
-            var sWatch = System.Diagnostics.Stopwatch.StartNew();
-            
+        static void Main()
+        {                       
             int CodeRandom, DescriptionRandom;
             string fileName = "c:\\temp\\out_small.txt";
             FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
@@ -20,7 +18,8 @@ namespace AltiumTest
             Random rndCode = new Random();
             Random rndDescription = new Random();
             string copier = "";
-            Int32 dubcode=0;
+            Int32 dubcode = 0;
+
             for (int i = 0; i < 1000000; i++)
             {
                 CodeRandom=rndCode.Next(0, int.MaxValue);
@@ -42,8 +41,9 @@ namespace AltiumTest
                     sw.WriteLine(dubcode.ToString() + "." + copier);
                 }
             }
-            sw.Close();          
+            sw.Close();
 
+            var sWatch = System.Diagnostics.Stopwatch.StartNew();
             //считываем все строки файла в массив
             string[] stringBuf = File.ReadAllLines(fileName);
 
@@ -74,7 +74,7 @@ namespace AltiumTest
 
             sWatch.Stop();
             Console.WriteLine("затрачено времени:{0}", sWatch.Elapsed);
-            Console.ReadKey();
+            Console.ReadKey();           
         }
     }
 }
