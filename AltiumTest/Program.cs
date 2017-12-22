@@ -34,17 +34,26 @@ namespace AltiumTest
             }
             sw.Close();*/
 
+            
             string fileName = "c:\\temp\\out_small.txt";
+
+            //считываем все строки файла в массив
             string[] stringBuf = File.ReadAllLines(fileName);
+
+            //преобразуем строки в объекты TextRecord
             List<TextRecord> textrecords = new List<TextRecord>();
             foreach (string stbuf in stringBuf)
             {
                 Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
-              string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length-stbuf.IndexOf("."));
+                string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
                 textrecords.Add(new TextRecord() { Code = code, Description=description });
             }
+
+            //сортируем объекты по полям Code и Description
             IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.Code).ThenBy(x => x.Description).ToList();
 
+
+            //пишем сортированные данные в файл
             fileName = "c:\\temp\\out_small_sorted.txt";
             FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
             StreamWriter sw = new StreamWriter(aFile);
@@ -54,6 +63,7 @@ namespace AltiumTest
             {
                 sw.WriteLine(trs.ToString());
             }
+            sw.Close();
         }
     }
 }

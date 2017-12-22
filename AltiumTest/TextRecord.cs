@@ -1,8 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
+
 
 namespace AltiumTest
 {
+    //создает класс TextRecord, содеражщий нужные нам свойства Code (до 1й точки в строке файла, Description (остальная часть строки),
+    //для последующей сортировки
     public class TextRecord: IEquatable<TextRecord>
     {
         public Int32 Code { get; set; }

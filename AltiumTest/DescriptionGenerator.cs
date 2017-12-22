@@ -1,16 +1,10 @@
 ﻿using System;
-using System.Text;
-using System.Security.Cryptography;
 
 namespace AltiumTest
 {
     public class KeyGenerator
     {
-        public static int GetRandomStringLength(int left, int right)
-        {
-            Random rnd = new Random();
-            return rnd.Next(left, right);
-        }       
+        //создает случайную строку заданной длины 
         public static string GetUniqueKeySimply(int maxSize)
         {
             string str="";
