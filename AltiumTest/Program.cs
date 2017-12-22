@@ -21,7 +21,7 @@ namespace AltiumTest
             Random rndDescription = new Random();
             string copier = "";
             Int32 dubcode=0;
-            for (int i = 0; i < 100; i++)
+            for (int i = 0; i < 10000; i++)
             {
                 CodeRandom=rndCode.Next(0, int.MaxValue);
                 DescriptionRandom = rndDescription.Next(0, 10);
