@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
+using System.Linq;
+
 
 namespace AltiumTest
 {
@@ -32,21 +35,25 @@ namespace AltiumTest
             sw.Close();*/
 
             string fileName = "c:\\temp\\out_small.txt";
-            TextRecord[] trec = new TextRecord[File.ReadAllLines(fileName).Length];
-            
-           // FileStream aFile = new FileStream(fileName, FileMode.Open);
-            StreamReader sr = new StreamReader(fileName);
-            //aFile.Seek(0, SeekOrigin.Begin);
-            string rec = "";          
-            int i = 0;
-            while (rec != null)
+            string[] stringBuf = File.ReadAllLines(fileName);
+            List<TextRecord> textrecords = new List<TextRecord>();
+            foreach (string stbuf in stringBuf)
             {
-                rec = sr.ReadLine();
-                trec[i].Code = Convert.ToInt32(rec.Substring(0, rec.IndexOf(".")-1));
-                i++;
+                Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
+              string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length-stbuf.IndexOf("."));
+                textrecords.Add(new TextRecord() { Code = code, Description=description });
             }
-            sr.Close();
-            Console.WriteLine(trec[0].Code);
+            IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.Code).ThenBy(x => x.Description).ToList();
+
+            fileName = "c:\\temp\\out_small_sorted.txt";
+            FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
+            StreamWriter sw = new StreamWriter(aFile);
+            aFile.Seek(0, SeekOrigin.End);
+
+            foreach (TextRecord trs in TRsorted)
+            {
+                sw.WriteLine(trs.ToString());
+            }
         }
     }
 }
