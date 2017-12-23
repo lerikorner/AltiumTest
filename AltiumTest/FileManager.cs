@@ -40,9 +40,7 @@ namespace AltiumTest
                 }
 
                 dubcode = CodeRandom;
-
                 strBlocks.Add(dubcode.ToString() + "." + copier);
-
             }
             return strBlocks;
         }
@@ -126,11 +124,9 @@ namespace AltiumTest
         {
             List<string> Tammy = new List<string>();
             List<string> Squirrel = new List<string>();
-            int flag = 0;
 
-            for (int k=0; k<FileSizeinStrings(inPath);k++)
+            for (int k = 0; k < FileSizeinStrings(inPath); k++)
             {
-                Tammy.Clear();
                 for (int i = 0; i < slicesCount - 1; i++)
                 {
                     string tempfileName = tempPath + i + ".txt";
@@ -139,67 +135,53 @@ namespace AltiumTest
                     {
                         StreamReader sr = new StreamReader(tempfileName);
 
-                        if (sr.Peek() != -1)
+                        if (FileSizeinStrings(tempfileName) >= 1)
                         {
                             Tammy.Add(sr.ReadLine());
-                            sr.Close();
-
                         }
-                        if (FileSizeinStrings(tempfileName) == 1)
+                        else if (FileSizeinStrings(tempfileName) == 1)
                         {
-                            File.Delete(tempfileName);
-                        }
-                        else sr.Close();
-
+                            Tammy.Add(sr.ReadLine());
+                            File.Delete(tempfileName);                         
+                        }                    
+                        sr.Close();
                     }
-
                 }
 
-                StreamWriter swout = new StreamWriter(outPath, true);
-              
-                swout.WriteLine(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault());
-               
-                Console.WriteLine("индекс минимальной записи: {0}", Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()));
-
+                StreamWriter swout = new StreamWriter(outPath, true);             
+                swout.WriteLine(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault());               
+                Console.WriteLine("индекс минимальной записи: {0}", Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()));               
                 swout.Close();
 
                 for (int i = 0; i < slicesCount - 1; i++)
                 {
                     string tempfileName = tempPath + i + ".txt";
 
-                    if (i != Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()))
+                    if (File.Exists(tempfileName))
                     {
-                        Squirrel.Add(Tammy[i]);
-                        foreach (string tline in File.ReadAllLines(tempfileName))
+                        if (i != Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()))
                         {
-                            Squirrel.Add(tline);
-                        }
-                        File.Delete(tempfileName);
-                        File.WriteAllLines(tempfileName, Squirrel);
-                        Squirrel.Clear();
-                    }
-
-                    else
-                    {
-                        if (File.Exists(tempfileName))
-                        {
-                            string[] cutFirst = File.ReadAllLines(tempfileName);
-                            File.Delete(tempfileName);
-                            StreamWriter sw = new StreamWriter(tempfileName, false);
-                            for (int j = 1; j < cutFirst.Length; j++)
+                            Squirrel.Add(Tammy[i]);
+                            foreach (string tline in File.ReadAllLines(tempfileName))
                             {
-                                {
-                                    sw.WriteLine(cutFirst[j]);
-                                }
+                                Squirrel.Add(tline);
                             }
-                            sw.Close();
+                            File.Delete(tempfileName);
+                            File.WriteAllLines(tempfileName, Squirrel);
                         }
-                            
-                    }
-                }
-            }
 
-           
+                        else
+                        {
+                            List<string> cutFirst = File.ReadAllLines(tempfileName).ToList<string>();
+                            File.Delete(tempfileName);
+                            cutFirst.RemoveAt(0);
+                            File.WriteAllLines(tempfileName, cutFirst);
+                        }
+                    }
+                    Tammy.Clear();
+                    Squirrel.Clear();
+                }
+            }          
         }    
     }
 }
