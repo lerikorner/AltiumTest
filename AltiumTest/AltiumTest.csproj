@@ -45,6 +45,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Sorting.cs" />
+    <Compile Include="FileManager.cs" />
     <Compile Include="DescriptionGenerator.cs" />
     <Compile Include="TextRecord.cs" />
     <Compile Include="Program.cs" />

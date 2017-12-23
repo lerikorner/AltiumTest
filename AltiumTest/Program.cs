@@ -3,77 +3,40 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
-
 namespace AltiumTest
 {
     class Program
-    {
-        static void Main()
-        {                       
-            int CodeRandom, DescriptionRandom;
+    {        
+        public static void Main()
+        {
             string fileName = "c:\\temp\\out_small.txt";
-            FileStream aFile = new FileStream(fileName, FileMode.OpenOrCreate);
-            StreamWriter sw = new StreamWriter(aFile);
-            aFile.Seek(0, SeekOrigin.End);
-            Random rndCode = new Random();
-            Random rndDescription = new Random();
-            string copier = "";
-            Int32 dubcode = 0;
 
-            for (int i = 0; i < 1000000; i++)
-            {
-                CodeRandom=rndCode.Next(0, int.MaxValue);
-                DescriptionRandom = rndDescription.Next(0, 1024);
-                Random rnd3 = new Random();
-                if (CodeRandom % (DescriptionRandom + 1) != 0)
-                {
-                    sw.WriteLine(CodeRandom.ToString() + "." + AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3));
-                    copier = AltiumTest.KeyGenerator.GetUniqueKeySimply(DescriptionRandom, rnd3);
-                }
-                else
-                if (CodeRandom % (DescriptionRandom + 1) != 5)
-                {
-                    sw.WriteLine(CodeRandom.ToString() + "." + copier);
-                    dubcode = CodeRandom;                
-                }
-                else
-                {
-                    sw.WriteLine(dubcode.ToString() + "." + copier);
-                }
-            }
-            sw.Close();
+            //создаем случайный список и пишем его в файл
+            //List<string> strBlock = FileManager.StringListRandomizer(102);  
+            
+            //FileManager.FileFromList(fileName, strBlock, false);
 
             var sWatch = System.Diagnostics.Stopwatch.StartNew();
             //считываем все строки файла в массив
-            string[] stringBuf = File.ReadAllLines(fileName);
+            string[] stringbuf = File.ReadAllLines(fileName);
 
-            //преобразуем строки в объекты TextRecord
-            List<TextRecord> textrecords = new List<TextRecord>();
-            foreach (string stbuf in stringBuf)
-            {
-                Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
-                string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
-                textrecords.Add(new TextRecord() { Code = code, Description=description });
-            }
-
-            //сортируем объекты по полям Code и Description
-            IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.Code).ThenBy(x => x.Description).ToList();
-
+            List<string> trSorted = Sorting.TRSortedtoStrings(stringbuf.ToList<string>());
 
             //пишем сортированные данные в файл
             fileName = "c:\\temp\\out_small_sorted.txt";
-            FileStream fileRandom = new FileStream(fileName, FileMode.OpenOrCreate);
-            StreamWriter swRandom = new StreamWriter(fileRandom);
-            fileRandom.Seek(0, SeekOrigin.End);
-
-            foreach (TextRecord trs in TRsorted)
-            {
-                swRandom.WriteLine(trs.ToString());
-            }
-            swRandom.Close();
-
+           
+            FileManager.FileFromList(fileName, trSorted, true);
             sWatch.Stop();
-            Console.WriteLine("затрачено времени:{0}", sWatch.Elapsed);
+
+            //делим файл на куски заданного размера
+            int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 300);
+
+            //просеиваем строки в кусках и пишем в итоговый файл
+            FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
+
+            Console.WriteLine("затрачено времени: {0}", sWatch.Elapsed);
+            Console.WriteLine("количество строк в файле: {0}", FileManager.FileSizeinStrings(fileName));
+
             Console.ReadKey();           
         }
     }

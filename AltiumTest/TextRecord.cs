@@ -28,7 +28,8 @@ namespace AltiumTest
         {
             if (other == null) return false;
             return (this.Code.Equals(other.Code));
-        }
+        }      
     }
+    
 }
 

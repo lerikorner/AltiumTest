@@ -5,15 +5,14 @@ namespace AltiumTest
     public class KeyGenerator
     {
         //создает случайную строку заданной длины 
-        public static string GetUniqueKeySimply(int maxSize, Random rnd)
+        public static string GetUniqueKeySimply(int stringSize)
         {
-            string str="";
-            char[] alphabet="abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890,.!?()@#%^-_ ".ToCharArray();          
-            for (int i = 0;i< maxSize; i++)
-            {
-                str += alphabet[rnd.Next(0, alphabet.Length)];
-            }
+            string str = "";
+            Random rand = new Random();
+            for (int i = 0; i < stringSize; i++)
+                str += (char)rand.Next(33, 126);
             return str;
+           ;
         }
     }
 }
