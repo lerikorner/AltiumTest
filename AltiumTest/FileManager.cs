@@ -57,18 +57,11 @@ namespace AltiumTest
 
         public static int FileSizeinStrings(string path)
         {
-            int counter = 0;
-            string line;
-            StreamReader file = new StreamReader(path);
-            while ((line = file.ReadLine()) != null)
+            if (File.Exists(path))
             {
-                if (!string.IsNullOrEmpty(line))
-                {
-                    counter++;
-                }
+                return File.ReadAllLines(path).Length;
             }
-            file.Close();
-            return (counter);
+            else return -1;
         }
 
         public static int FileSplit(string path, Int32 ListSize)
@@ -117,7 +110,7 @@ namespace AltiumTest
                 FileFromList(tempPath, strSlice, false);
                 strSlice.Clear();
             }
-            return counter + 1;
+            return counter;
         }
 
         public static void MergeSortedFile(string tempPath, int slicesCount, string inPath, string  outPath)
@@ -127,7 +120,7 @@ namespace AltiumTest
 
             for (int k = 0; k < FileSizeinStrings(inPath); k++)
             {
-                for (int i = 0; i < slicesCount - 1; i++)
+                for (int i = 0; i < slicesCount; i++)
                 {
                     string tempfileName = tempPath + i + ".txt";
 
@@ -135,16 +128,24 @@ namespace AltiumTest
                     {
                         StreamReader sr = new StreamReader(tempfileName);
 
-                        if (FileSizeinStrings(tempfileName) >= 1)
+                        if (FileSizeinStrings(tempfileName) > 1)
                         {
                             Tammy.Add(sr.ReadLine());
+                            sr.Close();
+
                         }
                         else if (FileSizeinStrings(tempfileName) == 1)
                         {
                             Tammy.Add(sr.ReadLine());
-                            File.Delete(tempfileName);                         
-                        }                    
-                        sr.Close();
+                            sr.Close();
+                            File.Delete(tempfileName);
+                        }
+                        else if (FileSizeinStrings(tempfileName) <= 0)
+                        {
+                            sr.Close();
+                            File.Delete(tempfileName);
+                        }
+                                               
                     }
                 }
 
@@ -152,35 +153,59 @@ namespace AltiumTest
                 swout.WriteLine(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault());               
                 Console.WriteLine("индекс минимальной записи: {0}", Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()));               
                 swout.Close();
+                int flag = Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault());
 
-                for (int i = 0; i < slicesCount - 1; i++)
+                for (int i = 0; i < slicesCount; i++)
                 {
                     string tempfileName = tempPath + i + ".txt";
 
                     if (File.Exists(tempfileName))
-                    {
-                        if (i != Tammy.IndexOf(Sorting.TRSortedtoStrings(Tammy).FirstOrDefault()))
-                        {
-                            Squirrel.Add(Tammy[i]);
-                            foreach (string tline in File.ReadAllLines(tempfileName))
+                    {                      
+                        if (FileSizeinStrings(tempfileName) > 1)
+                        {                           
+                            /*if (i != flag)
                             {
-                                Squirrel.Add(tline);
+                                Squirrel.Add(Tammy[i]);
+                                foreach (string tline in File.ReadAllLines(tempfileName))
+                                {
+                                    Squirrel.Add(tline);
+                                }
+                                File.Delete(tempfileName);
+                                File.WriteAllLines(tempfileName, Squirrel);
+                            }*/
+                            //else
+                           if (i == flag)
+                            {
+                                List<string> cutFirst = File.ReadAllLines(tempfileName).ToList<string>();
+                                File.Delete(tempfileName);
+                                cutFirst.RemoveAt(0);
+                                File.WriteAllLines(tempfileName, cutFirst);
                             }
-                            File.Delete(tempfileName);
-                            File.WriteAllLines(tempfileName, Squirrel);
+                          
                         }
-
-                        else
+                        else if (FileSizeinStrings(tempfileName) == 1)
                         {
-                            List<string> cutFirst = File.ReadAllLines(tempfileName).ToList<string>();
-                            File.Delete(tempfileName);
-                            cutFirst.RemoveAt(0);
-                            File.WriteAllLines(tempfileName, cutFirst);
+                           
+                            if (i != flag)
+                            {
+                                Squirrel.Add(Tammy[i]);
+                                File.Delete(tempfileName);
+                                File.WriteAllLines(tempfileName, Squirrel);
+                            }
+                            else if (i == flag)
+                            {
+                                List<string> cutFirst = File.ReadAllLines(tempfileName).ToList<string>();
+                                File.Delete(tempfileName);                              
+                                File.WriteAllLines(tempfileName, cutFirst);
+                            }
+                          
                         }
+                        else File.Delete(tempfileName);
                     }
-                    Tammy.Clear();
-                    Squirrel.Clear();
+
                 }
+                Tammy.Clear();
+                Squirrel.Clear();
             }          
         }    
     }

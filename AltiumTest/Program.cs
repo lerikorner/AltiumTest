@@ -29,7 +29,7 @@ namespace AltiumTest
             sWatch.Stop();
 
             //делим файл на куски заданного размера
-            int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 30);
+            int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 23);
 
             //просеиваем строки в кусках и пишем в итоговый файл
             FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
