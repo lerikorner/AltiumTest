@@ -6,24 +6,25 @@ using System.Linq;
 namespace AltiumTest
 {
     class Program
-    {        
+    {
+        static int sliceSize = 930000;
+        static int fileSize = 100000;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
 
             //создаем случайный список и пишем его в файл
-            List<string> strBlock = FileManager.StringListRandomizer(1000);  
+            //List<string> strBlock = FileManager.StringListRandomizer(fileSize);  
             
-            FileManager.FileFromList(fileName, strBlock, false);
+            //FileManager.FileFromList(fileName, strBlock, false);
 
             var sWatch = System.Diagnostics.Stopwatch.StartNew();           
 
-            //делим файл на куски заданного размера
-            int sliceSize = 30;
+            //делим файл на куски заданного размера           
 
             if (sliceSize < FileManager.FileSizeinStrings("c:\\temp\\out_small.txt"))
             {
-                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 930);
+                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", sliceSize);
                 Console.WriteLine("количество временных файлов: {0}", counter);
 
                 //просеиваем строки в кусках и пишем в итоговый файл

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 
 namespace AltiumTest
 {
@@ -7,12 +8,11 @@ namespace AltiumTest
         //создает случайную строку заданной длины 
         public static string GetUniqueKeySimply(int stringSize)
         {
-            string str = "";
+            StringBuilder builder = new StringBuilder();           
             Random rand = new Random();
             for (int i = 0; i < stringSize; i++)
-                str += (char)rand.Next(33, 126);
-            return str;
-           ;
+                builder.Append((char)rand.Next(33, 126));         
+            return builder.ToString();
         }
     }
 }
