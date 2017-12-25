@@ -23,7 +23,7 @@ namespace AltiumTest
 
             if (sliceSize < FileManager.FileSizeinStrings("c:\\temp\\out_small.txt"))
             {
-                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 330);
+                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", 930);
                 Console.WriteLine("количество временных файлов: {0}", counter);
 
                 //просеиваем строки в кусках и пишем в итоговый файл

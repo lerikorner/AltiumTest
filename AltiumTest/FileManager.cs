@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-
+using System.Threading;
 using System.IO;
 
 namespace AltiumTest
@@ -108,36 +108,93 @@ namespace AltiumTest
             else return -1;
         }
 
+        class StateObject<T>
+        {
+            public T UserState { get; private set; }
+            public object SyncRoot { get; private set; }
+            public bool IsCancelled { get; set; }
+
+            public StateObject(T state, object syncRoot)
+            {
+                UserState = state;
+                SyncRoot = syncRoot;
+            }
+        }
+
+        static void ThreadProc(object arg)
+        {
+            Console.WriteLine("Worker thread started.");
+
+            var state = arg as StateObject<StreamReader>;
+            var reader = state.UserState;
+            var sync = state.SyncRoot;
+
+
+            string line;
+
+            // Считывание строки из файла.
+            lock (sync)
+                line = reader.ReadLine();
+
+            // Строки кончились, цикл завершается.
+
+            // Обработка строки. Может занять длительное время.
+            Process(line);
+
+            Console.WriteLine("Worker thread finished.");
+        }
+
+        static void Process(string line)
+        {
+            Console.WriteLine("Processing line '{0}'", line);
+
+            // Обработка строки занимает некоторое время.
+            Thread.Sleep(TimeSpan.FromSeconds(1));
+        }
+
         public static void MergeSortedFile(string tempPath, int slicesCount, string inPath, string  outPath)
         {
             List<string> Tammy = new List<string>();
             List<string> Squirrel = new List<string>();
             string tempfileName = "";
+            StreamReader[] sr = new StreamReader[slicesCount];
+
+            var threads=new Thread[slicesCount];
+            int threadEmpty;
 
             for (int k = 0; k < FileSizeinStrings(inPath); k++)
             {
                 for (int i = 0; i < slicesCount; i++)
                 {
-                    tempfileName = tempPath + i + ".txt";
-                    if (File.Exists(tempfileName))
+                   
+                    if (File.Exists(tempfileName = tempPath + i + ".txt"))
                     {
-                        StreamReader sr = new StreamReader(tempfileName);
-                        Console.WriteLine("размер временного файла: {0}", FileSizeinStrings(tempfileName));
-                        if (FileSizeinStrings(tempfileName) > 1)
+                        tempfileName = tempPath + i + ".txt";
+
+                        if (sr[i] == null)
                         {
-                            Tammy.Add(sr.ReadLine());
-                            sr.Close();
+                            threadEmpty = i;
+                            sr[threadEmpty] = new StreamReader(tempfileName);
+                            var state = new StateObject<StreamReader>(sr[threadEmpty], new object());
+                            if ((FileSizeinStrings(tempfileName) > 1) & (threads[i] == null))
+                            {
+                                threads[i] = new Thread(ThreadProc);
+                                threads[i].Start(state);
+                            }
                         }
+                        
+                        Console.WriteLine("размер временного файла: {0}", FileSizeinStrings(tempfileName));
+                        
                         else if (FileSizeinStrings(tempfileName) == 1)
                         {
-                            Tammy.Add(sr.ReadLine());
-                            sr.Close();
+                            Tammy.Add(sr[i].ReadLine());
+                            sr[i].Close();
                             File.Delete(tempfileName);
                            
                         }
-                        else if (FileSizeinStrings(tempfileName) != -1)
+                        else if (FileSizeinStrings(tempfileName) == -1)
                         {
-                            sr.Close();
+                            sr[i].Close();
                             File.Delete(tempfileName);                            
                         }                                               
                     }
@@ -156,7 +213,7 @@ namespace AltiumTest
                 if (File.Exists(tempfileName))
                 {
                     if (FileSizeinStrings(tempfileName) > 1)
-                    {
+                    {                       
                         List<string> cutFirst = File.ReadAllLines(tempfileName).ToList<string>();
                         File.Delete(tempfileName);
                         cutFirst.RemoveAt(0);
