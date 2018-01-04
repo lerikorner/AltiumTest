@@ -7,7 +7,7 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 930000;
+        static int sliceSize = 930;
         static int fileSize = 100000;
         public static void Main()
         {
@@ -28,7 +28,8 @@ namespace AltiumTest
                 Console.WriteLine("количество временных файлов: {0}", counter);
 
                 //просеиваем строки в кусках и пишем в итоговый файл
-                FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
+                //FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
+                FileManager.MergeByQueues("c:\\temp\\splits\\out_slice", fileName, "c:\\temp\\out_merged_sorted.txt");
             }
             else
             {
