@@ -24,7 +24,7 @@ namespace AltiumTest
 
             List<string> strBlocks = new List<string>();
 
-            for (int i = 0; i < length; i++)
+            for (Int32 i = 0; i < length; i++)
             {               
                 CodeRandom = rndCode.Next(0, codeRange);
                 DescriptionRandom = rndCode.Next(0, stringRange);
@@ -184,6 +184,19 @@ namespace AltiumTest
                 // Find the chunk with the lowest value
                 lowest_index = -1;
                 lowest_value = "";
+                /*for (j = 0; j < chunks; j++)
+                {
+                    if (queues[j] != null)
+                    {
+                        if (lowest_index < 0 ||
+                          String.CompareOrdinal(
+                            queues[j].Peek(), lowest_value) < 0)
+                        {
+                            lowest_index = j;
+                            lowest_value = queues[j].Peek();
+                        }
+                    }
+                }*/
                 for (j = 0; j < chunks; j++)
                 {
                     if (queues[j] != null)

@@ -7,16 +7,16 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 2100;
-        static int fileSize = 100000;
+        static int sliceSize = 210000;
+        static Int32 fileSize = 10000000;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
 
             //создаем случайный список и пишем его в файл
-            //List<string> strBlock = FileManager.StringListRandomizer(fileSize);  
+            List<string> strBlock = FileManager.StringListRandomizer(fileSize);  
             
-            //FileManager.FileFromList(fileName, strBlock, false);
+            FileManager.FileFromList(fileName, strBlock, false);
 
             var sWatch = System.Diagnostics.Stopwatch.StartNew();           
 
