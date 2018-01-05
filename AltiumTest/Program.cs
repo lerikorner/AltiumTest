@@ -7,7 +7,7 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 8000;
+        static int sliceSize = 8900;
         static Int32 fileSize = 9000;
         public static void Main()
         {
