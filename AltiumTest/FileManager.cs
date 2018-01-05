@@ -147,9 +147,9 @@ namespace AltiumTest
         {
             string[] paths = Directory.GetFiles(tempPath, "out_slice*.txt");
             int chunks = paths.Length; // количество кусков
-            int recordsize = 1024; // estimated record size
-            int records = 100000000; // estimated total # records
-            Int64 maxusage = 5000000000; // max memory usage
+            int recordsize = 1035; // estimated record size
+            int records = 90000; // estimated total # records
+            Int64 maxusage = 1000000000; // max memory usage
             Int64 buffersize = maxusage / chunks; // bytes of each queue
             double recordoverhead = 7.5; // The overhead of using Queue<>
             int bufferlen = (int)(buffersize / recordsize /
@@ -191,8 +191,10 @@ namespace AltiumTest
                     {
                         if (lowest_index < 0 ||(
                           String.CompareOrdinal(
-                            queues[j].Peek(), lowest_value) < 0)&
-                            (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().ToString().IndexOf("."))) <= 
+                            queues[j].Peek().Substring(queues[j].Peek().ToString().IndexOf("."), queues[j].Peek().ToString().Length - 1),
+                            lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length - 1)) < 0)
+                            &
+                            (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().ToString().IndexOf("."))) < 
                             Convert.ToInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
                         {
                             lowest_index = j;
