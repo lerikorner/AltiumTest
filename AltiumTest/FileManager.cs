@@ -64,16 +64,16 @@ namespace AltiumTest
             else return -1;
         }
 
-        public static int FileSplit(string path, Int32 ListSize)
+        public static int FileSplit(string path, Int32 FileSize, Int32 ListSize)
         {
             var FiletoProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
             int counter = 0;
             string tempPath = "";
 
-            if (ListSize < FileSizeinStrings(path))
+            if (ListSize < FileSize)
             {
-                counter = FileSizeinStrings(path) / ListSize;
+                counter = FileSize / ListSize;
                 for (int i = 0; i < counter; i++)
                 {
                     tempPath = "c:\\temp\\splits\\out_slice" + i + ".txt";
@@ -86,7 +86,7 @@ namespace AltiumTest
                     strSlice.Clear();
                 }
 
-                if (FileSizeinStrings(path) % ListSize != 0)
+                if (FileSize % ListSize != 0)
                 {
                     tempPath = "c:\\temp\\splits\\out_slice" + counter + ".txt";
                     while (FiletoProcess.Peek() != -1)
@@ -100,7 +100,7 @@ namespace AltiumTest
                 return counter + 1;
 
             }
-            else if (ListSize >= FileSizeinStrings(path))
+            else if (ListSize >= FileSize)
             {              
                 return 1;
             }
@@ -147,10 +147,10 @@ namespace AltiumTest
         {
             string[] paths = Directory.GetFiles(tempPath, "out_slice*.txt");
             int chunks = paths.Length; // количество кусков
-            int recordsize = 100; // estimated record size
-            int records = 10000000; // estimated total # records
-            int maxusage = 500000000; // max memory usage
-            int buffersize = maxusage / chunks; // bytes of each queue
+            int recordsize = 1024; // estimated record size
+            int records = 100000000; // estimated total # records
+            Int64 maxusage = 5000000000; // max memory usage
+            Int64 buffersize = maxusage / chunks; // bytes of each queue
             double recordoverhead = 7.5; // The overhead of using Queue<>
             int bufferlen = (int)(buffersize / recordsize /
               recordoverhead); // number of records in each queue
@@ -182,41 +182,30 @@ namespace AltiumTest
                       100.0 * progress / records);
 
                 // Find the chunk with the lowest value
+                
                 lowest_index = -1;
                 lowest_value = "";
-                /*for (j = 0; j < chunks; j++)
-                {
-                    if (queues[j] != null)
-                    {
-                        if (lowest_index < 0 ||
-                          String.CompareOrdinal(
-                            queues[j].Peek(), lowest_value) < 0)
-                        {
-                            lowest_index = j;
-                            lowest_value = queues[j].Peek();
-                        }
-                    }
-                }*/
                 for (j = 0; j < chunks; j++)
                 {
                     if (queues[j] != null)
                     {
-                        if (lowest_index < 0 ||
+                        if (lowest_index < 0 ||(
                           String.CompareOrdinal(
-                            queues[j].Peek(), lowest_value) < 0)
+                            queues[j].Peek(), lowest_value) < 0)&
+                            (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().ToString().IndexOf("."))) <= 
+                            Convert.ToInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
                         {
                             lowest_index = j;
                             lowest_value = queues[j].Peek();
                         }
                     }
                 }
-
+                             
                 // Was nothing found in any queue? We must be done then.
                 if (lowest_index == -1) { done = true; break; }
 
                 // Output it
                 sw.WriteLine(lowest_value);
-
                 // Remove from queue
                 queues[lowest_index].Dequeue();
                 // Have we emptied the queue? Top it up

@@ -7,24 +7,46 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 210000;
-        static Int32 fileSize = 10000000;
+        static int sliceSize = 800000;
+        static Int32 fileSize = 90000000;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
-
-            //создаем случайный список и пишем его в файл
-            List<string> strBlock = FileManager.StringListRandomizer(fileSize);  
+            int fsize = 0;
+            List<string> strBlock = new List<string>();
+            //создаем случайные списки и пишем их в файл поблочно
+            while (fsize < fileSize)
+            {             
+                if (fileSize % sliceSize == 0)
+                {
+                    fsize += sliceSize;
+                    strBlock = FileManager.StringListRandomizer(sliceSize);
+                    File.AppendAllLines(fileName, strBlock);
+                }
+                else if (fileSize - fsize < sliceSize)
+                {
+                    fsize += fileSize % sliceSize;
+                    strBlock = FileManager.StringListRandomizer(fileSize % sliceSize);
+                    File.AppendAllLines(fileName, strBlock);
+                }
+                else
+                {
+                    fsize += sliceSize;
+                    strBlock = FileManager.StringListRandomizer(sliceSize);
+                    File.AppendAllLines(fileName, strBlock);
+                }
+            }
+             
             
-            FileManager.FileFromList(fileName, strBlock, false);
+            //FileManager.FileFromList(fileName, strBlock, false);
 
             var sWatch = System.Diagnostics.Stopwatch.StartNew();           
 
             //делим файл на куски заданного размера           
 
-            if (sliceSize < FileManager.FileSizeinStrings("c:\\temp\\out_small.txt"))
+            if (sliceSize <fileSize)
             {
-                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", sliceSize);
+                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", fileSize, sliceSize);
                 Console.WriteLine("количество временных файлов: {0}", counter);
 
                 //просеиваем строки в кусках и пишем в итоговый файл

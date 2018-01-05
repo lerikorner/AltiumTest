@@ -13,9 +13,13 @@ namespace AltiumTest
 
             foreach (string stbuf in stringBuf)
             {
-                Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
-                string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
-                textrecords.Add(new TextRecord() { Code = code, Description = description });
+                if (stbuf != null)
+                {
+                    Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
+                    string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
+                    textrecords.Add(new TextRecord() { Code = code, Description = description });
+                }
+                
             }
 
             //сортируем объекты по полям Code и Description
