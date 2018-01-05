@@ -7,8 +7,8 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 80000;
-        static Int32 fileSize = 90000;
+        static int sliceSize = 8000;
+        static Int32 fileSize = 9000;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
