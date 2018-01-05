@@ -196,7 +196,7 @@ namespace AltiumTest
                             lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
                             lowest_value.IndexOf("."))) < 0)
                             &
-                            (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().ToString().IndexOf("."))) <=
+                            (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().ToString().IndexOf("."))) <
                             Convert.ToInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
                         {
                             lowest_index = j;
