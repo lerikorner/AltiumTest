@@ -10,8 +10,8 @@ namespace AltiumTest
     public class FileManager
     {
         public static int StringRange = 1024;
-        public static Int32 FileSize = 100000;
-        public static Int32 SliceSize = 25500;
+        public static Int32 FileSize = 209000;
+        public static Int32 SliceSize = 65000;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
         public static List<string> StringListRandomizer(int length)
@@ -109,12 +109,12 @@ namespace AltiumTest
             int slices = paths.Length; // количество кусков
             int recordsize = StringRange + Int32.MaxValue.ToString().Length + 1; // оценочная длина записи
             int records = FileSize; // ожидаемое количество записей в файле
-            Int64 maxusage = Convert.ToInt64(TotalRam / 8); // максимальное использование памяти
+            Int64 maxusage = Convert.ToInt64(TotalRam / 4); // максимальное использование памяти
             Int64 buffersize = maxusage / slices; // байт на каждый кусок
             double recordoverhead = 7.5; // The overhead of using Queue<> - как я понял, тут коэффициент превращения байт в строки, с небольшим запасом
-            //int bufferlen = (int)(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
+            int bufferlen = Convert.ToInt32(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
 
-            int bufferlen = slices;
+            //int bufferlen = slices;
 
             Console.WriteLine(bufferlen);
             Console.WriteLine(TotalRam);
@@ -149,12 +149,13 @@ namespace AltiumTest
                 
                 lowest_index = -1;
                 lowest_value = "";
+                bool flag;
                 for (j = 0; j < slices; j++)
                 {
                     if (queues[j] != null)
                     {
-                        if ((lowest_index < 0) ||
-                            (String.CompareOrdinal(
+                       
+                        if ((lowest_index < 0) || (String.CompareOrdinal(
                             queues[j].Peek().Substring(queues[j].Peek().IndexOf("."), queues[j].Peek().Length -
                             queues[j].Peek().IndexOf(".")),
                             lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
@@ -171,23 +172,25 @@ namespace AltiumTest
                              
                 // Was nothing found in any queue? We must be done then.
                 if (lowest_index == -1) { done = true; break; }
-
-                // Output it
-                sw.WriteLine(lowest_value);
-
-
-                // Remove from queue
-                queues[lowest_index].Dequeue();
-                // Have we emptied the queue? Top it up
-                if (queues[lowest_index].Count == 0)
+                else
                 {
-                    LoadQueue(queues[lowest_index],
-                      readers[lowest_index], bufferlen);
-                    // Was there nothing left to read?
+                    // Output it
+                    sw.WriteLine(lowest_value);
+
+                    // Remove from queue
+                    queues[lowest_index].Dequeue();
+                    // Have we emptied the queue? Top it up
                     if (queues[lowest_index].Count == 0)
                     {
-                        queues[lowest_index] = null;
+                        LoadQueue(queues[lowest_index],
+                          readers[lowest_index], bufferlen);
+                        // Was there nothing left to read?
+                        if (queues[lowest_index].Count == 0)
+                        {
+                            queues[lowest_index] = null;
+                        }
                     }
+                
                 }
             }
             sw.Close();
