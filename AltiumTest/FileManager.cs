@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.IO;
@@ -9,15 +10,14 @@ namespace AltiumTest
     public class FileManager
     {
         public static int StringRange = 1024;
-        public static Int32 FileSize = 50000;
-        public static Int32 SliceSize = 2900;
+        public static Int32 FileSize = 100000;
+        public static Int32 SliceSize = 25500;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
         public static List<string> StringListRandomizer(int length)
         {
             int CodeRandom, DescriptionRandom;
-            Random rndCode = new Random();
-           
+            Random rndCode = new Random();          
 
             //диапазоны значений
             int codeRange = int.MaxValue;
@@ -107,14 +107,15 @@ namespace AltiumTest
         {
             string[] paths = Directory.GetFiles(tempPath, "out_slice*.txt");
             int slices = paths.Length; // количество кусков
-            int recordsize = StringRange + Int32.MaxValue.ToString().Length; // оценочная длина записи
+            int recordsize = StringRange + Int32.MaxValue.ToString().Length + 1; // оценочная длина записи
             int records = FileSize; // ожидаемое количество записей в файле
             Int64 maxusage = Convert.ToInt64(TotalRam / 8); // максимальное использование памяти
             Int64 buffersize = maxusage / slices; // байт на каждый кусок
-            double recordoverhead = 64; // The overhead of using Queue<> - как я понял, тут коэффициент превращения байт в строки, с небольшим запасом
-
+            double recordoverhead = 7.5; // The overhead of using Queue<> - как я понял, тут коэффициент превращения байт в строки, с небольшим запасом
             //int bufferlen = (int)(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
-            int bufferlen = records/slices;
+
+            int bufferlen = slices;
+
             Console.WriteLine(bufferlen);
             Console.WriteLine(TotalRam);
             Console.WriteLine(recordsize);
