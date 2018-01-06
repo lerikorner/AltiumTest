@@ -10,7 +10,7 @@ namespace AltiumTest
     public class FileManager
     {
         public static int StringRange = 1024;
-        public static Int32 FileSize = 209000;
+        public static Int32 FileSize = 29000;
         public static Int32 SliceSize = 65000;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
