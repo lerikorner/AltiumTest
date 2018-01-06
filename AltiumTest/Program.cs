@@ -7,8 +7,8 @@ namespace AltiumTest
 {
     class Program
     {
-        static int sliceSize = 8900;
-        static Int32 fileSize = 9000;
+        static int sliceSize = FileManager.SliceSize;
+        static Int32 fileSize = FileManager.FileSize;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
@@ -67,7 +67,7 @@ namespace AltiumTest
             }
             sWatch.Stop();
             Console.WriteLine("затрачено времени: {0}", sWatch.Elapsed);
-            Console.WriteLine("количество строк в файле: {0}", FileManager.FileSizeinStrings(fileName));
+            Console.WriteLine("количество строк в файле: {0}", MethodsBIN.FileSizeinStrings(fileName));
 
             Console.ReadKey();           
         }

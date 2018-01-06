@@ -39,6 +39,7 @@
     <StartupObject>AltiumTest.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Microsoft.VisualBasic" />
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Xml.Linq" />
@@ -49,6 +50,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="MethodsBIN.cs" />
     <Compile Include="Sorting.cs" />
     <Compile Include="FileManager.cs" />
     <Compile Include="DescriptionGenerator.cs" />
