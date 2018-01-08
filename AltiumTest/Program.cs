@@ -8,6 +8,8 @@ namespace AltiumTest
     class Program
     {
         //размер куска в строках
+        //static string workpath = "c:\\temp";
+
         static int sliceSize = FileManager.SliceSize;
 
         //размер файла в строках (так как максимальная длина строки по заданию 1024 символа + 11 цифр UInt, а величина значения и строки в записи случайны,
@@ -15,7 +17,8 @@ namespace AltiumTest
         static Int32 fileSize = FileManager.FileSize;
         public static void Main()
         {
-            string fileName = "c:\\temp\\out_small.txt";
+            FileManager.CreateWorkingDirs(FileManager.workpath);
+            string fileName = FileManager.workpath + "\\out_small.txt";
             int fsize = 0;
             List<string> strBlock = new List<string>();
 
@@ -51,12 +54,12 @@ namespace AltiumTest
 
             if (sliceSize <fileSize)
             {
-                int counter = FileManager.FileSplit("c:\\temp\\out_small.txt", fileSize, sliceSize);
+                int counter = FileManager.FileSplit(fileName, fileSize, sliceSize);
                 Console.WriteLine("количество временных файлов: {0}", counter);
 
                 //просеиваем строки в кусках и пишем в итоговый файл
                 //FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
-                FileManager.MergeByQueues("c:\\temp\\splits\\", fileName, "c:\\temp\\out_merged_sorted.txt");
+                FileManager.MergeByQueues(FileManager.workpath+"\\splits\\", fileName, FileManager.workpath+"\\out_merged_sorted.txt");
             }
             else
             {
@@ -66,7 +69,7 @@ namespace AltiumTest
                 List<string> trSorted = Sorting.TRSortedtoStrings(stringbuf.ToList<string>());
 
                 //пишем сортированные данные в файл
-                fileName = "c:\\temp\\out_small_sorted.txt";
+                fileName = FileManager.workpath+"\\out_small_sorted.txt";
 
                 FileManager.FileFromList(fileName, trSorted, true);               
             }

@@ -7,7 +7,7 @@ namespace AltiumTest
     //методы сортировки
     class Sorting
     {
-        public static List<string> TRSortedtoStrings(List<string> stringBuf)
+        public static List<string> TRSortedtoStrings(List<string> stringBuf) //быстрая сортировка
         {
             //преобразуем строки в объекты TextRecord
             List<TextRecord> textrecords = new List<TextRecord>();
@@ -32,6 +32,26 @@ namespace AltiumTest
                 TRtoString.Add(trs.ToString());
             }
             return TRtoString;
+        }
+
+        public static List<string> TRSortedtoStringsByInserts(List<string> stringBuf) //сортировка вставками - в разы (10 и выше) медленнее QSORT 
+        {           
+            int i, j;
+            string tmpString;
+            for (i = 1; i < stringBuf.Count; i++)
+            {
+                j = i;
+                while ((j > 0) && 
+                    (Convert.ToUInt32(stringBuf[j].Substring(0, stringBuf[j].IndexOf("."))) <
+                    Convert.ToUInt32(stringBuf[j - 1].Substring(0, stringBuf[j - 1].IndexOf(".")))))
+                {
+                    tmpString = stringBuf[j];
+                    stringBuf[j] = stringBuf[j - 1];
+                    stringBuf[j - 1] = tmpString;
+                    j--;
+                }
+            }
+            return stringBuf;
         }
     }
 }

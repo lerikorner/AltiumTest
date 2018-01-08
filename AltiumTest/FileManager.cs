@@ -10,11 +10,21 @@ namespace AltiumTest
     //работа с файлами
     public class FileManager
     {
-        public static int StringRange = 1024;
-        public static Int32 FileSize = 90000;
-        public static Int32 SliceSize = 6500;
-        public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
+        public static string workpath = "c:\\temp"; //рабочая папка
+        public static int StringRange = 1024; //максимальная длина строки генерируемого файла
+        public static Int32 FileSize = 900; //размер файла в строках
+        public static Int32 SliceSize = 650; //размер куска в строках
+        public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; //объем физической памяти
 
+        //создание рабочих папок
+        public static void CreateWorkingDirs(string path)
+        {
+            if (!Directory.Exists(path))
+            {               
+                Directory.CreateDirectory(path);
+                Directory.CreateDirectory(path + "\\splits");
+            }
+        }
 
         //создание случайного списка
         public static List<string> StringListRandomizer(int length)
@@ -80,19 +90,20 @@ namespace AltiumTest
                 counter = FileSize / ListSize;
                 for (int i = 0; i < counter; i++)
                 {
-                    tempPath = "c:\\temp\\splits\\out_slice" + i + ".txt"; //имя временного файла-куска
+                    tempPath = workpath+"\\splits\\out_slice" + i + ".txt"; //имя временного файла-куска
                     for (int j = 0; j < ListSize; j++)
                     {
                         strSlice.Add(FiletoProcess.ReadLine());
                     }
-                    strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем в списке и пишем в i-й временный файл
+                    strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем QSORT в списке и пишем в i-й временный файл
+                    //strSlice = Sorting.TRSortedtoStringsByInserts(strSlice); //набранные строки сортируем INSERT SORT в списке и пишем в i-й временный файл
                     FileFromList(tempPath, strSlice, true); //и пишем в i-й временный файл
                     strSlice.Clear();//чистим временный списое
                 }
 
                 if (FileSize % ListSize != 0)
                 {
-                    tempPath = "c:\\temp\\splits\\out_slice" + counter + ".txt";
+                    tempPath = workpath+"\\splits\\out_slice" + counter + ".txt";
                     while (FiletoProcess.Peek() != -1)
                     {
                         strSlice.Add(FiletoProcess.ReadLine());
@@ -119,7 +130,7 @@ namespace AltiumTest
             int records = FileSize; // ожидаемое количество записей в файле
             Int64 maxusage = Convert.ToInt64(TotalRam / 4); // максимальное использование памяти, ограничиваем весь пул в 4 раза
             Int64 buffersize = maxusage / slices; // байт на каждый кусок
-            double recordoverhead = 7.5; // The overhead of using Queue<> - как я понял, тут коэффициент превращения байт в строки, с небольшим запасом
+            double recordoverhead = 7.5; // коэффициент превращения байт в строки, с небольшим запасом
             int bufferlen = Convert.ToInt32(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
             //int bufferlen = records / slices + 1;
 
@@ -164,7 +175,7 @@ namespace AltiumTest
                     if (queues[j] != null)
                     {   
                         //в сито падает: либо первый член среза всех очередей, либо член с наименьшим значением Code. 
-                        //Сортировка Description проихсодит автоматически.
+                        //Сортировка Description происходит автоматически.
                         if ((lowest_index < 0)|| 
                             (Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf("."))) <
                              Convert.ToUInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
