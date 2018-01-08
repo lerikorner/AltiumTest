@@ -116,11 +116,11 @@ namespace AltiumTest
             int slices = paths.Length; // количество кусков
             int recordsize = StringRange + UInt32.MaxValue.ToString().Length + 1; // оценочная длина записи
             int records = FileSize; // ожидаемое количество записей в файле
-            Int64 maxusage = Convert.ToInt64(TotalRam / 4); // максимальное использование памяти
+            Int64 maxusage = Convert.ToInt64(TotalRam / 4); // максимальное использование памяти, ограничиваем весь пул в 4 раза
             Int64 buffersize = maxusage / slices; // байт на каждый кусок
             double recordoverhead = 7.5; // The overhead of using Queue<> - как я понял, тут коэффициент превращения байт в строки, с небольшим запасом
-            //int bufferlen = Convert.ToInt32(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
-            int bufferlen = records / slices + 1;
+            int bufferlen = Convert.ToInt32(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
+            //int bufferlen = records / slices + 1;
 
             Console.WriteLine("количество записей в очереди: {0}", bufferlen);
             Console.WriteLine("объем доступной оперативной памяти: {0} Мбайт", TotalRam/(1024*1024));
