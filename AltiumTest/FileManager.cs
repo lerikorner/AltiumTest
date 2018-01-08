@@ -9,8 +9,8 @@ namespace AltiumTest
 {
     public class FileManager
     {
-        public static int StringRange = 1024;
-        public static Int32 FileSize = 29000;
+        public static int StringRange = 10;
+        public static Int32 FileSize = 290000;
         public static Int32 SliceSize = 65000;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
@@ -20,7 +20,7 @@ namespace AltiumTest
             Random rndCode = new Random();          
 
             //диапазоны значений
-            int codeRange = int.MaxValue;
+            int codeRange = 10;
             int stringRange = StringRange;
 
             //повторители для Code и Description
@@ -155,7 +155,14 @@ namespace AltiumTest
                     if (queues[j] != null)
                     {
                        
-                        if ((lowest_index < 0) || (String.CompareOrdinal(
+                        if (lowest_index < 0)
+                        {
+                            lowest_index = j;
+                            lowest_value = queues[j].Peek();
+                        }
+                        else 
+                        if 
+                            ((String.CompareOrdinal(
                             queues[j].Peek().Substring(queues[j].Peek().IndexOf("."), queues[j].Peek().Length -
                             queues[j].Peek().IndexOf(".")),
                             lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
@@ -164,8 +171,7 @@ namespace AltiumTest
                             (Convert.ToInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf("."))) <
                             Convert.ToInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
                         {
-                            lowest_index = j;
-                            lowest_value = queues[j].Peek();
+
                         }
                     }
                 }
