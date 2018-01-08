@@ -7,7 +7,7 @@ namespace AltiumTest
     //для последующей сортировки
     public class TextRecord: IEquatable<TextRecord>
     {
-        public Int32 Code { get; set; }
+        public UInt32 Code { get; set; }
         public string Description { get; set; }
         public override string ToString()
         {
@@ -22,7 +22,7 @@ namespace AltiumTest
         }
         public override int GetHashCode()
         {
-            return Code;
+            return (int)Code;
         }
         public bool Equals(TextRecord other)
         {

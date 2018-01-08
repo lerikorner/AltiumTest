@@ -7,13 +7,18 @@ namespace AltiumTest
 {
     class Program
     {
+        //размер куска в строках
         static int sliceSize = FileManager.SliceSize;
+
+        //размер файла в строках (так как максимальная длина строки по заданию 1024 символа + 11 цифр UInt, а величина значения и строки в записи случайны,
+        //то физический размер файла в байтах приблизительно будет равен 1/2 Filesize.
         static Int32 fileSize = FileManager.FileSize;
         public static void Main()
         {
             string fileName = "c:\\temp\\out_small.txt";
             int fsize = 0;
             List<string> strBlock = new List<string>();
+
             //создаем случайные списки и пишем их в файл поблочно
             while (fsize < fileSize)
             {             

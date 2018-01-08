@@ -15,7 +15,7 @@ namespace AltiumTest
             {
                 if (stbuf != null)
                 {
-                    Int32 code = Convert.ToInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
+                    UInt32 code = Convert.ToUInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
                     string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
                     textrecords.Add(new TextRecord() { Code = code, Description = description });
                 }
