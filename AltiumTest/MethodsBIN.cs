@@ -7,6 +7,7 @@ using System.IO;
 
 namespace AltiumTest
 {
+    //пул неиспользуемых методов/методов в доработке
     class MethodsBIN
     {
         public static int FileSizeinStrings(string path)

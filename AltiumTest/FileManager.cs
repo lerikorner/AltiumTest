@@ -7,11 +7,12 @@ using System.IO;
 
 namespace AltiumTest
 {
+    //работа с файлами
     public class FileManager
     {
         public static int StringRange = 1024;
-        public static Int32 FileSize = 29000;
-        public static Int32 SliceSize = 6500;
+        public static Int32 FileSize = 990000;
+        public static Int32 SliceSize = 650000;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
 

@@ -8,7 +8,7 @@ namespace AltiumTest
         //создает случайную строку заданной длины 
         public static string GetUniqueKeySimply(Int32 stringSize)
         {
-            int startRange = 33, endRange = 126;           
+            int startRange = 32, endRange = 126;           
             StringBuilder builder = new StringBuilder();           
             Random rand = new Random();
             for (Int32 i = 0; i < stringSize; i++)
