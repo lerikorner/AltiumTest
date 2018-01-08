@@ -11,15 +11,15 @@ namespace AltiumTest
     public class FileManager
     {
         public static int StringRange = 1024;
-        public static Int32 FileSize = 990000;
-        public static Int32 SliceSize = 650000;
+        public static Int32 FileSize = 90000;
+        public static Int32 SliceSize = 6500;
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory;
 
 
         //создание случайного списка
         public static List<string> StringListRandomizer(int length)
         {
-            int CodeRandom, DescriptionRandom;
+            int codeRandom, descriptionRandom;
             Random rndCode = new Random();          
 
             //диапазоны значений
@@ -36,18 +36,18 @@ namespace AltiumTest
 
             for (Int32 i = 0; i < length; i++)
             {               
-                CodeRandom = rndCode.Next(codeRangeLeft, codeRangeRight);
-                codeRandomUInt = (uint)(CodeRandom + codeRangeRight);
-                DescriptionRandom = rndCode.Next(0, stringRange);
-                string desc = KeyGenerator.GetUniqueKeySimply(DescriptionRandom);
+                codeRandom = rndCode.Next(codeRangeLeft, codeRangeRight);
+                codeRandomUInt = (uint)(codeRandom + codeRangeRight);
+                descriptionRandom = rndCode.Next(0, stringRange);
+                string desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
 
-                if (CodeRandom % (DescriptionRandom + 1) != 0)
+                if (codeRandom % (descriptionRandom + 1) != 0)//вход в условие создание копии строки (исходя из ТЗ)
                 {
                     copier = desc;
                 }
                 else
                 {
-                    desc = KeyGenerator.GetUniqueKeySimply(DescriptionRandom);
+                    desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom); 
                 }
 
                 dubcode = codeRandomUInt;
@@ -68,7 +68,7 @@ namespace AltiumTest
         }
 
         //Разрезание файла на куски, которые сразу сортируются в оперативной памяти
-        public static int FileSplit(string path, Int32 FileSize, Int32 ListSize)
+        public static int FileSplit(string path, Int32 FileSize, Int32 ListSize) //на выходе метод даёт количество временных файлов
         {
             var FiletoProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
@@ -80,14 +80,14 @@ namespace AltiumTest
                 counter = FileSize / ListSize;
                 for (int i = 0; i < counter; i++)
                 {
-                    tempPath = "c:\\temp\\splits\\out_slice" + i + ".txt";
+                    tempPath = "c:\\temp\\splits\\out_slice" + i + ".txt"; //имя временного файла-куска
                     for (int j = 0; j < ListSize; j++)
                     {
                         strSlice.Add(FiletoProcess.ReadLine());
                     }
-                    strSlice = Sorting.TRSortedtoStrings(strSlice);
-                    FileFromList(tempPath, strSlice, true);
-                    strSlice.Clear();
+                    strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем в списке и пишем в i-й временный файл
+                    FileFromList(tempPath, strSlice, true); //и пишем в i-й временный файл
+                    strSlice.Clear();//чистим временный списое
                 }
 
                 if (FileSize % ListSize != 0)
@@ -125,7 +125,7 @@ namespace AltiumTest
 
             Console.WriteLine("количество записей в очереди: {0}", bufferlen);
             Console.WriteLine("объем доступной оперативной памяти: {0} Мбайт", TotalRam/(1024*1024));
-            Console.WriteLine("оценочная максимальная длина строки: {0}", recordsize);
+            Console.WriteLine("максимальная длина строки: {0}", recordsize);
 
             // Открытие временных файлов на чтение
             StreamReader[] readers = new StreamReader[slices];
@@ -158,29 +158,26 @@ namespace AltiumTest
                 lowest_index = -1;
                 lowest_value = "";
                 bool flag;
+
                 for (j = 0; j < slices; j++)
                 {
                     if (queues[j] != null)
-                    {                      
-                        if (lowest_index < 0)
+                    {   
+                        //в сито падает: либо первый член среза всех очередей, либо член с наименьшим значением Code. 
+                        //Сортировка Description проихсодит автоматически.
+                        if ((lowest_index < 0)|| 
+                            (Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf("."))) <
+                             Convert.ToUInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
+                        //  ((String.CompareOrdinal(
+                        //  queues[j].Peek().Substring(queues[j].Peek().IndexOf("."), queues[j].Peek().Length -
+                        //  queues[j].Peek().IndexOf(".")),
+                        //  lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
+                        //  lowest_value.IndexOf("."))) < 0)
+                        //  &
                         {
                             lowest_index = j;
                             lowest_value = queues[j].Peek();
-                        }
-                        else 
-                        if 
-                          //  ((String.CompareOrdinal(
-                          //  queues[j].Peek().Substring(queues[j].Peek().IndexOf("."), queues[j].Peek().Length -
-                          //  queues[j].Peek().IndexOf(".")),
-                          //  lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
-                          //  lowest_value.IndexOf("."))) < 0)
-                          //  &
-                           ( (Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf("."))) <
-                            Convert.ToUInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
-                        {
-                            lowest_index = j;
-                            lowest_value = queues[j].Peek();
-                        }
+                        }                      
                     }
                 }
                              
@@ -217,6 +214,7 @@ namespace AltiumTest
             }
         }
 
+        //Метод загрузки очереди строкой из файла
         static void LoadQueue(Queue<string> queue,
             StreamReader file, int records)
         {

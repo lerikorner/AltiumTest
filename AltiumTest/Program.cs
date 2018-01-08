@@ -71,9 +71,9 @@ namespace AltiumTest
                 FileManager.FileFromList(fileName, trSorted, true);               
             }
             sWatch.Stop();
-            Console.WriteLine("затрачено времени: {0}", sWatch.Elapsed);
-            Console.WriteLine("количество строк в файле: {0}", MethodsBIN.FileSizeinStrings(fileName));
 
+            Console.WriteLine("затрачено времени: {0}", sWatch.Elapsed);
+            Console.WriteLine("количество строк в файле: {0}", FileManager.FileSize);
             Console.ReadKey();           
         }
     }
