@@ -12,8 +12,8 @@ namespace AltiumTest
     {
         public static string workpath = "c:\\temp"; //рабочая папка
         public static int StringRange = 1024; //максимальная длина строки генерируемого файла
-        public static Int32 FileSize = 900; //размер файла в строках
-        public static Int32 SliceSize = 650; //размер куска в строках
+        public static Int32 FileSize = 900000; //размер файла в строках
+        public static Int32 SliceSize = 65000; //размер куска в строках
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; //объем физической памяти
 
         //создание рабочих папок
@@ -95,8 +95,8 @@ namespace AltiumTest
                     {
                         strSlice.Add(FiletoProcess.ReadLine());
                     }
-                    strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем QSORT в списке и пишем в i-й временный файл
-                    //strSlice = Sorting.TRSortedtoStringsByInserts(strSlice); //набранные строки сортируем INSERT SORT в списке и пишем в i-й временный файл
+                    //strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем QSORT в списке и пишем в i-й временный файл
+                    strSlice = Sorting.TRSortedtoStringsByInserts(strSlice); //набранные строки сортируем INSERT SORT в списке и пишем в i-й временный файл
                     FileFromList(tempPath, strSlice, true); //и пишем в i-й временный файл
                     strSlice.Clear();//чистим временный списое
                 }

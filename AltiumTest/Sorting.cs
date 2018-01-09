@@ -34,7 +34,7 @@ namespace AltiumTest
             return TRtoString;
         }
 
-        public static List<string> TRSortedtoStringsByInserts(List<string> stringBuf) //сортировка вставками - в разы (10 и выше) медленнее QSORT 
+        public static List<string> TRSortedtoStringsByInserts(List<string> stringBuf) //сортировка вставками
         {           
             int i, j;
             string tmpString;

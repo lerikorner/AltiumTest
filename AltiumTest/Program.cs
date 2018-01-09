@@ -17,13 +17,13 @@ namespace AltiumTest
         static Int32 fileSize = FileManager.FileSize;
         public static void Main()
         {
-            FileManager.CreateWorkingDirs(FileManager.workpath);
+            //FileManager.CreateWorkingDirs(FileManager.workpath);
             string fileName = FileManager.workpath + "\\out_small.txt";
             int fsize = 0;
             List<string> strBlock = new List<string>();
 
             //создаем случайные списки и пишем их в файл поблочно
-            while (fsize < fileSize)
+            while ((fsize < fileSize) & (0 > 1))
             {             
                 if (fileSize % sliceSize == 0)
                 {
