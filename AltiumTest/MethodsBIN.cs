@@ -7,7 +7,7 @@ using System.IO;
 
 namespace AltiumTest
 {
-    //пул неиспользуемых методов/методов в доработке
+    // MARK: - unused methods pool
     class MethodsBIN
     {
         public static int FileSizeinStrings(string path)
@@ -51,10 +51,10 @@ namespace AltiumTest
                         {
                             //if ((threads[i] == null))
                             //{
-                            //   var state = new StateObject<StreamReader>(sr[i], new object());
-                            //    threads[i] = new Thread(ThreadProc);
-                            //    threads[i].Start(state);
-                            // }
+                            //var state = new StateObject<StreamReader>(sr[i], new object());
+                            //threads[i] = new Thread(ThreadProc);
+                            //threads[i].Start(state);
+                            //}
 
                             if (FileSizeinStrings(tempfileName) > 1)
                             {
@@ -75,16 +75,15 @@ namespace AltiumTest
                                 File.Delete(tempfileName);
                             }
                         }
-
                     }
                 }
 
-                flag = TammyGlobal.IndexOf(Sorting.TRSortedtoStrings(TammyGlobal).FirstOrDefault());
+                flag = TammyGlobal.IndexOf(SortingMethods.TextRecordSortedInStrings(TammyGlobal).FirstOrDefault());
 
-                swout.WriteLine(Sorting.TRSortedtoStrings(TammyGlobal).FirstOrDefault());
+                swout.WriteLine(SortingMethods.TextRecordSortedInStrings(TammyGlobal).FirstOrDefault());
                 Console.WriteLine("индекс минимальной записи: {0}", flag);
 
-                //Console.WriteLine("количество кусков: {0}", slicesCount);
+                
                 tempfileName = tempPath + flag + ".txt";
                 TammyGlobal.Clear();
                 if (File.Exists(tempfileName))
@@ -100,7 +99,6 @@ namespace AltiumTest
                         cutFirst.Clear();
                         sr[flag] = new StreamReader(tempfileName);
                     }
-
 
                     else if (FileSizeinStrings(tempfileName) <= 1)
                     {
@@ -135,8 +133,7 @@ namespace AltiumTest
             var sync = state.SyncRoot;
 
             string line;
-
-            // Считывание строки из файла.
+            
             lock (sync)
                 line = reader.ReadLine();
 
@@ -144,7 +141,6 @@ namespace AltiumTest
 
             TammyGlobal.Add(line);
             reader.BaseStream.Seek(0, SeekOrigin.Begin);
-
         }
     }
 }

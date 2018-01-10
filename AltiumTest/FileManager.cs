@@ -7,16 +7,16 @@ using System.IO;
 
 namespace AltiumTest
 {
-    //работа с файлами
+    // MARK: - files processing
     public class FileManager
     {
-        public static string workpath = "c:\\temp"; //рабочая папка
-        public static int StringRange = 1024; //максимальная длина строки генерируемого файла
-        public static Int32 FileSize = 900000; //размер файла в строках
-        public static Int32 SliceSize = 65000; //размер куска в строках
-        public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; //объем физической памяти
+        public static string WorkPath = "c:\\temp"; // MARK: - working dir
+        public static int StringRange = 1024; // MARK: - max Description size
+        public static Int32 FileSize = 900000; // MARK: - file size in strings
+        public static Int32 SliceSize = 65000; // MARK: - slice size in strings
+        public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
-        //создание рабочих папок
+        // MARK: - working directories creating
         public static void CreateWorkingDirs(string path)
         {
             if (!Directory.Exists(path))
@@ -26,19 +26,19 @@ namespace AltiumTest
             }
         }
 
-        //создание случайного списка
+        // MARK: - creating random list
         public static List<string> StringListRandomizer(int length)
         {
             int codeRandom, descriptionRandom;
             Random rndCode = new Random();          
 
-            //диапазоны значений
+            // MARK: - value ranges
             int codeRangeRight = Int32.MaxValue;
             int codeRangeLeft = Int32.MinValue;
             uint codeRandomUInt = 0;
             int stringRange = StringRange;
 
-            //повторители для Code и Description
+            //repeaters for CodeID and Description
             string copier = "";
             UInt32 dubcode = 0;
 
@@ -51,7 +51,8 @@ namespace AltiumTest
                 descriptionRandom = rndCode.Next(0, stringRange);
                 string desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
 
-                if (codeRandom % (descriptionRandom + 1) != 0)//вход в условие создание копии строки (исходя из ТЗ)
+                // MARK: - copying strings from time to time
+                if (codeRandom % (descriptionRandom + 1) != 0)
                 {
                     copier = desc;
                 }
@@ -59,28 +60,56 @@ namespace AltiumTest
                 {
                     desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom); 
                 }
-
                 dubcode = codeRandomUInt;
                 strBlocks.Add(dubcode.ToString() + "." + copier);
             }
             return strBlocks;
         }
 
-        //перенос списка в файл (с опцией создания файла)
+        // MARK: - list to file method, with creating option
         public static void FileFromList(string path, List<string>data, bool create)
         {
             if (create)
             {
-                if (File.Exists(path)) File.Delete(path);
-                //File.Create(path);
+                if (File.Exists(path)) File.Delete(path);              
             }
             File.WriteAllLines(path, data);           
         }
 
-        //Разрезание файла на куски, которые сразу сортируются в оперативной памяти
-        public static int FileSplit(string path, Int32 FileSize, Int32 ListSize) //на выходе метод даёт количество временных файлов
+        public static void CreateFileFromLists(string path)
         {
-            var FiletoProcess = new StreamReader(path);
+            int FilePosition = 0;
+            List<string> StringList = new List<string>();
+            string fileName = FileManager.WorkPath + "\\out_small.txt";
+
+            // MARK: - appending slices to file, while current position is before output file size
+            while (FilePosition < FileSize)
+            {
+                if (FileSize % SliceSize == 0)
+                {
+                    FilePosition += SliceSize;
+                    StringList = FileManager.StringListRandomizer(SliceSize);
+                    File.AppendAllLines(fileName, StringList);
+                }
+                else if (FileSize - FilePosition < SliceSize)
+                {
+                    FilePosition += FileSize % SliceSize;
+                    StringList = FileManager.StringListRandomizer(FileSize % SliceSize);
+                    File.AppendAllLines(fileName, StringList);
+                }
+                else
+                {
+                    FilePosition += SliceSize;
+                    StringList = FileManager.StringListRandomizer(SliceSize);
+                    File.AppendAllLines(fileName, StringList);
+                }
+            }
+        }
+
+        // MARK: - file splitting/sorting/output to temp files
+        public static int FileSplit(string path, Int32 FileSize, Int32 ListSize) 
+        {
+            var FileToProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
             int counter = 0;
             string tempPath = "";
@@ -90,25 +119,31 @@ namespace AltiumTest
                 counter = FileSize / ListSize;
                 for (int i = 0; i < counter; i++)
                 {
-                    tempPath = workpath+"\\splits\\out_slice" + i + ".txt"; //имя временного файла-куска
+                    tempPath = WorkPath+"\\splits\\out_slice" + i + ".txt"; 
                     for (int j = 0; j < ListSize; j++)
                     {
-                        strSlice.Add(FiletoProcess.ReadLine());
+                        strSlice.Add(FileToProcess.ReadLine());
                     }
-                    //strSlice = Sorting.TRSortedtoStrings(strSlice); //набранные строки сортируем QSORT в списке и пишем в i-й временный файл
-                    strSlice = Sorting.TRSortedtoStringsByInserts(strSlice); //набранные строки сортируем INSERT SORT в списке и пишем в i-й временный файл
-                    FileFromList(tempPath, strSlice, true); //и пишем в i-й временный файл
-                    strSlice.Clear();//чистим временный списое
+
+                    // MARK: - random equitable file: using Quick Sort
+                    //strSlice = Sorting.TextRecordSortedInStrings(strSlice); 
+
+                    // MARK: - nearly sorted file: using Insertion Sort
+                    strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
+
+                    // MARK: - filling temp file with sorted list
+                    FileFromList(tempPath, strSlice, true); 
+                    strSlice.Clear();
                 }
 
                 if (FileSize % ListSize != 0)
                 {
-                    tempPath = workpath+"\\splits\\out_slice" + counter + ".txt";
-                    while (FiletoProcess.Peek() != -1)
+                    tempPath = WorkPath+"\\splits\\out_slice" + counter + ".txt";
+                    while (FileToProcess.Peek() != -1)
                     {
-                        strSlice.Add(FiletoProcess.ReadLine());
+                        strSlice.Add(FileToProcess.ReadLine());
                     }
-                    strSlice = Sorting.TRSortedtoStrings(strSlice);
+                    strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
                     FileFromList(tempPath, strSlice, false);
                     strSlice.Clear();
                 }
@@ -121,111 +156,98 @@ namespace AltiumTest
             else return -1;
         }
 
-        //Лепка готового файла с помощью очередей
+        // MARK: - merging with queues
         public static void MergeByQueues(string tempPath, string inPath, string outPath)
         {
-            string[] paths = Directory.GetFiles(tempPath, "out_slice*.txt");
-            int slices = paths.Length; // количество кусков
-            int recordsize = StringRange + UInt32.MaxValue.ToString().Length + 1; // оценочная длина записи
-            int records = FileSize; // ожидаемое количество записей в файле
-            Int64 maxusage = Convert.ToInt64(TotalRam / 4); // максимальное использование памяти, ограничиваем весь пул в 4 раза
-            Int64 buffersize = maxusage / slices; // байт на каждый кусок
-            double recordoverhead = 7.5; // коэффициент превращения байт в строки, с небольшим запасом
-            int bufferlen = Convert.ToInt32(buffersize / (recordsize * recordoverhead)); //количество записей в очереди
-            //int bufferlen = records / slices + 1;
+            string[] TempPaths = Directory.GetFiles(tempPath, "out_slice*.txt");
+            int Slices = TempPaths.Length; // MARK: - slices count
+            int RecordSize = StringRange + UInt32.MaxValue.ToString().Length + 1; // MARK: - max string length
+            int Records = FileSize; // MARK: - file size
+            Int64 MaxUsage = Convert.ToInt64(TotalRam / 4); // MARK: - RAM volume, cut by 4
+            Int64 BufferSize = MaxUsage / Slices; // MARK: - bytes per slice
+            double RecordOverHead = 7.5; // MARK: - bytes to strings count
+            int BufferLength = Convert.ToInt32(BufferSize / (RecordSize * RecordOverHead)); // MARK: - records count in queue
+                       
+            // MARK: - stream readers opening
+            StreamReader[] readers = new StreamReader[Slices];
+            for (int i = 0; i < Slices; i++)
+                readers[i] = new StreamReader(TempPaths[i]);
 
-            Console.WriteLine("количество записей в очереди: {0}", bufferlen);
-            Console.WriteLine("объем доступной оперативной памяти: {0} Мбайт", TotalRam/(1024*1024));
-            Console.WriteLine("максимальная длина строки: {0}", recordsize);
+            // MARK: - queues creating
+            Queue<string>[] queues = new Queue<string>[Slices];
+            for (int i = 0; i < Slices; i++)
+                queues[i] = new Queue<string>(BufferLength);
 
-            // Открытие временных файлов на чтение
-            StreamReader[] readers = new StreamReader[slices];
-            for (int i = 0; i < slices; i++)
-                readers[i] = new StreamReader(paths[i]);
+            // MARK: - queues loading
+            for (int i = 0; i < Slices; i++)
+                LoadQueue(queues[i], readers[i], BufferLength);
 
-            // Создание очередей
-            Queue<string>[] queues = new Queue<string>[slices];
-            for (int i = 0; i < slices; i++)
-                queues[i] = new Queue<string>(bufferlen);
-
-            // Загрузка очередей
-            for (int i = 0; i < slices; i++)
-                LoadQueue(queues[i], readers[i], bufferlen);
-
-            // Лепка файла
+            // MARK: - file merge
             StreamWriter sw = new StreamWriter(outPath);
             bool done = false;
-            int lowest_index, j, progress = 0;
-            string lowest_value;
+            int LowestValueStringIndex, j, progress = 0; 
+            uint   LowestStringCodeID, CurrentStringCodeID;
+            string LowestValueString;
 
             while (!done)
             {
-                // Прогресс на экране
+                // MARK: - progress on screen
                 if (++progress % 5000 == 0)
                     Console.Write("{0:f2}%   \r",
-                      100.0 * progress / records);
-
-                // Находим очередь с наименьшим значением, ближайшим к выводу               
-                lowest_index = -1;
-                lowest_value = "";
-                bool flag;
-
-                for (j = 0; j < slices; j++)
+                      100.0 * progress / Records);
+                               
+                LowestValueStringIndex = -1;
+                LowestValueString = "";               
+                for (j = 0; j < Slices; j++)
                 {
                     if (queues[j] != null)
-                    {   
-                        //в сито падает: либо первый член среза всех очередей, либо член с наименьшим значением Code. 
-                        //Сортировка Description происходит автоматически.
-                        if ((lowest_index < 0)|| 
-                            (Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf("."))) <
-                             Convert.ToUInt32(lowest_value.Substring(0, lowest_value.IndexOf(".")))))
-                        //  ((String.CompareOrdinal(
-                        //  queues[j].Peek().Substring(queues[j].Peek().IndexOf("."), queues[j].Peek().Length -
-                        //  queues[j].Peek().IndexOf(".")),
-                        //  lowest_value.Substring(lowest_value.IndexOf("."), lowest_value.Length -
-                        //  lowest_value.IndexOf("."))) < 0)
-                        //  &
+                    {
+                        // MARK: - searching for 1st or lowest value                       
+                        LowestStringCodeID = Convert.ToUInt32(LowestValueString.Substring(0, LowestValueString.IndexOf(".")));
+                        CurrentStringCodeID = Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf(".")));
+                        if (LowestValueStringIndex < 0 || CurrentStringCodeID < LowestStringCodeID)
                         {
-                            lowest_index = j;
-                            lowest_value = queues[j].Peek();
+                            LowestValueStringIndex = j;
+                            LowestValueString = queues[j].Peek();
                         }                      
                     }
                 }
                              
-                // Выход из цикла, если в очереди ничего 
-                if (lowest_index == -1) { done = true; break; }
+                // MARK: - break if we are done 
+                if (LowestValueStringIndex == -1) { done = true; break; }
                 else
                 {
-                    // Вывод в файл
-                    sw.WriteLine(lowest_value);
+                    // MARK: - output to file
+                    sw.WriteLine(LowestValueString);
 
-                    // Удаление элемента из очереди
-                    queues[lowest_index].Dequeue();
-                    // Продвижение следующего элемента в очередь
-                    if (queues[lowest_index].Count == 0)
+                    // MARK: - queue record deleting
+                    queues[LowestValueStringIndex].Dequeue();
+
+                    // MARK: - shifting queue 
+                    if (queues[LowestValueStringIndex].Count == 0)
                     {
-                        LoadQueue(queues[lowest_index],
-                          readers[lowest_index], bufferlen);
+                        LoadQueue(queues[LowestValueStringIndex],
+                          readers[LowestValueStringIndex], BufferLength);
 
-                        // Проверка на наличие элементов в очереди
-                        if (queues[lowest_index].Count == 0)
+                        // MARK: - queues records amount checking
+                        if (queues[LowestValueStringIndex].Count == 0)
                         {
-                            queues[lowest_index] = null;
+                            queues[LowestValueStringIndex] = null;
                         }
                     }               
                 }
             }
             sw.Close();
 
-            // Закрываем и удаляем временные файлы
-            for (int i = 0; i < slices; i++)
+            // MARK: - closing and deleting temporary files
+            for (int i = 0; i < Slices; i++)
             {
                 readers[i].Close();
-                File.Delete(paths[i]);
+                File.Delete(TempPaths[i]);
             }
         }
 
-        //Метод загрузки очереди строкой из файла
+        // MARK: - loading queue with string read from file
         static void LoadQueue(Queue<string> queue,
             StreamReader file, int records)
         {

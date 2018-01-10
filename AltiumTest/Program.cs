@@ -7,76 +7,51 @@ namespace AltiumTest
 {
     class Program
     {
-        //размер куска в строках
-        //static string workpath = "c:\\temp";
+        // MARK: - slice size in strings  
+        static int slicesize = FileManager.SliceSize;
 
-        static int sliceSize = FileManager.SliceSize;
-
-        //размер файла в строках (так как максимальная длина строки по заданию 1024 символа + 11 цифр UInt, а величина значения и строки в записи случайны,
-        //то физический размер файла в байтах приблизительно будет равен 1/2 Filesize.
+        // MARK: - file size in strings      
         static Int32 fileSize = FileManager.FileSize;
+
         public static void Main()
         {
-            //FileManager.CreateWorkingDirs(FileManager.workpath);
-            string fileName = FileManager.workpath + "\\out_small.txt";
-            int fsize = 0;
-            List<string> strBlock = new List<string>();
-
-            //создаем случайные списки и пишем их в файл поблочно
-            while ((fsize < fileSize) & (0 > 1))
-            {             
-                if (fileSize % sliceSize == 0)
-                {
-                    fsize += sliceSize;
-                    strBlock = FileManager.StringListRandomizer(sliceSize);
-                    File.AppendAllLines(fileName, strBlock);
-                }
-                else if (fileSize - fsize < sliceSize)
-                {
-                    fsize += fileSize % sliceSize;
-                    strBlock = FileManager.StringListRandomizer(fileSize % sliceSize);
-                    File.AppendAllLines(fileName, strBlock);
-                }
-                else
-                {
-                    fsize += sliceSize;
-                    strBlock = FileManager.StringListRandomizer(sliceSize);
-                    File.AppendAllLines(fileName, strBlock);
-                }
-            }
-             
+            // MARK: - working paths creating
+            FileManager.CreateWorkingDirs(FileManager.WorkPath);
             
-            //FileManager.FileFromList(fileName, strBlock, false);
+            // MARK: - creating file of known size
+            string FileName = FileManager.WorkPath + "\\out_small.txt";
+            FileManager.CreateFileFromLists(FileName);
+            
+            // MARK: - timer starts...
+            var sWatch = System.Diagnostics.Stopwatch.StartNew();
 
-            var sWatch = System.Diagnostics.Stopwatch.StartNew();           
-
-            //делим файл на куски заданного размера           
-
-            if (sliceSize <fileSize)
+            // MARK: - file splitting, in case of slice sizes      
+            // MARK: - if slice size is less than file size, we go with split/external sort/merge procedure
+            if (slicesize <fileSize)
             {
-                int counter = FileManager.FileSplit(fileName, fileSize, sliceSize);
-                Console.WriteLine("количество временных файлов: {0}", counter);
-
-                //просеиваем строки в кусках и пишем в итоговый файл
-                //FileManager.MergeSortedFile("c:\\temp\\splits\\out_slice", counter, fileName, "c:\\temp\\out_merged_sorted.txt");
-                FileManager.MergeByQueues(FileManager.workpath+"\\splits\\", fileName, FileManager.workpath+"\\out_merged_sorted.txt");
+                int counter = FileManager.FileSplit(FileName, fileSize, slicesize);
+                Console.WriteLine("slices count: {0}", counter);            
+                FileManager.MergeByQueues(FileManager.WorkPath+"\\splits\\", FileName, FileManager.WorkPath+"\\out_merged_sorted.txt");
             }
+
+            // MARK: - else we just sort file in RAM
             else
             {
-                //считываем все строки файла в массив
-               string[] stringbuf = File.ReadAllLines(fileName);
+                // MARK: - reading all strings to array
+               string[] stringbuf = File.ReadAllLines(FileName);
 
-                List<string> trSorted = Sorting.TRSortedtoStrings(stringbuf.ToList<string>());
+                // MARK: - sorting array
+                List<string> trSorted = SortingMethods.TextRecordSortedInStrings(stringbuf.ToList<string>());
 
-                //пишем сортированные данные в файл
-                fileName = FileManager.workpath+"\\out_small_sorted.txt";
-
-                FileManager.FileFromList(fileName, trSorted, true);               
+                // MARK: - writing array to output file
+                FileName = FileManager.WorkPath+"\\out_small_sorted.txt";
+                FileManager.FileFromList(FileName, trSorted, true);               
             }
-            sWatch.Stop();
 
-            Console.WriteLine("затрачено времени: {0}", sWatch.Elapsed);
-            Console.WriteLine("количество строк в файле: {0}", FileManager.FileSize);
+            // MARK: - timer stops.
+            sWatch.Stop();
+            Console.WriteLine("time spent: {0}", sWatch.Elapsed);
+            Console.WriteLine("strings in file: {0}", FileManager.FileSize);
             Console.ReadKey();           
         }
     }

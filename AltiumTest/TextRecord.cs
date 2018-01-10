@@ -1,18 +1,20 @@
 ﻿using System;
 
-
 namespace AltiumTest
 {
-    //создает класс TextRecord, содеражщий нужные нам свойства Code (до 1й точки в строке файла, Description (остальная часть строки),
-    //для последующей сортировки
+    // MARK: - TextRecord object, containing CodeID, Description properties 
+    // MARK: - Iequatable interface implementation
     public class TextRecord: IEquatable<TextRecord>
     {
-        public UInt32 Code { get; set; }
+        public UInt32 CodeID { get; set; }
+
         public string Description { get; set; }
+
         public override string ToString()
         {
-            return Code + Description;
+            return CodeID + Description;
         }
+
         public override bool Equals(object obj)
         {
             if (obj == null) return false;
@@ -20,16 +22,17 @@ namespace AltiumTest
             if (objAsTextRecord == null) return false;
             else return Equals(objAsTextRecord);
         }
+
         public override int GetHashCode()
         {
-            return (int)Code;
+            return (int)CodeID;
         }
+
         public bool Equals(TextRecord other)
         {
             if (other == null) return false;
-            return (this.Code.Equals(other.Code));
+            return (this.CodeID.Equals(other.CodeID));
         }      
-    }
-    
+    }  
 }
 

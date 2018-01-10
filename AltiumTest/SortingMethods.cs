@@ -4,28 +4,33 @@ using System.Linq;
 
 namespace AltiumTest
 {
-    //методы сортировки
-    class Sorting
+    // MARK: - sorting methods
+    class SortingMethods
     {
-        public static List<string> TRSortedtoStrings(List<string> stringBuf) //быстрая сортировка
+        // MARK: - quick sort by 2 parameters using LINQ
+        public static List<string> TextRecordSortedInStrings(List<string> stringBuf) 
         {
-            //преобразуем строки в объекты TextRecord
+            // MARK: - transforming strings to TextRecord objects
             List<TextRecord> textrecords = new List<TextRecord>();
 
             foreach (string stbuf in stringBuf)
             {
                 if (stbuf != null)
                 {
-                    UInt32 code = Convert.ToUInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
+                    UInt32 codeid = Convert.ToUInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
                     string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
-                    textrecords.Add(new TextRecord() { Code = code, Description = description });
+                    textrecords.Add(new TextRecord()
+                    {
+                        CodeID = codeid,
+                        Description = description
+                    });
                 }                
             }
 
-            //сортируем объекты по полям: Code, затем Description
-            IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.Code).ThenBy(x => x.Description).ToList();
+            // MARK: - sorting by CodeID and Description values
+            IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.CodeID).ThenBy(x => x.Description).ToList();
 
-            //преобразуем список для копирования в файл
+            // MARK: - transforming TextRecord to string
             List<string> TRtoString = new List<string>();
             foreach (TextRecord trs in TRsorted)
             {
@@ -34,9 +39,10 @@ namespace AltiumTest
             return TRtoString;
         }
 
-        public static List<string> TRSortedtoStringsByInserts(List<string> stringBuf) //сортировка вставками
+        // MARK: - insertion sort
+        public static List<string> TRSortedtoStringsByInserts(List<string> stringBuf) 
         {           
-            int i, j;
+            int i, j;           
             string tmpString;
             for (i = 1; i < stringBuf.Count; i++)
             {
