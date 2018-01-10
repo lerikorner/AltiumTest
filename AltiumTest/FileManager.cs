@@ -12,7 +12,7 @@ namespace AltiumTest
     {
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int StringRange = 1024; // MARK: - max Description size
-        public static Int32 FileSize = 900000; // MARK: - file size in strings
+        public static Int32 FileSize = 90000; // MARK: - file size in strings
         public static Int32 SliceSize = 65000; // MARK: - slice size in strings
         public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -76,7 +76,7 @@ namespace AltiumTest
             File.WriteAllLines(path, data);           
         }
 
-        public static void CreateFileFromLists(string path)
+        public static void CreateFileFromLists()
         {
             int FilePosition = 0;
             List<string> StringList = new List<string>();
@@ -126,10 +126,10 @@ namespace AltiumTest
                     }
 
                     // MARK: - random equitable file: using Quick Sort
-                    //strSlice = Sorting.TextRecordSortedInStrings(strSlice); 
+                    strSlice = SortingMethods.TextRecordSortedInStrings(strSlice); 
 
                     // MARK: - nearly sorted file: using Insertion Sort
-                    strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
+                    //strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
 
                     // MARK: - filling temp file with sorted list
                     FileFromList(tempPath, strSlice, true); 
@@ -185,8 +185,8 @@ namespace AltiumTest
             // MARK: - file merge
             StreamWriter sw = new StreamWriter(outPath);
             bool done = false;
-            int LowestValueStringIndex, j, progress = 0; 
-            uint   LowestStringCodeID, CurrentStringCodeID;
+            int LowestValueStringIndex, j, progress = 0;
+            uint LowestStringCodeID = 0, CurrentStringCodeID=0;
             string LowestValueString;
 
             while (!done)
@@ -203,8 +203,11 @@ namespace AltiumTest
                     if (queues[j] != null)
                     {
                         // MARK: - searching for 1st or lowest value                       
-                        LowestStringCodeID = Convert.ToUInt32(LowestValueString.Substring(0, LowestValueString.IndexOf(".")));
-                        CurrentStringCodeID = Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf(".")));
+                        if (LowestValueStringIndex >= 0)
+                        {
+                            LowestStringCodeID = Convert.ToUInt32(LowestValueString.Substring(0, LowestValueString.IndexOf(".")));
+                            CurrentStringCodeID = Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf(".")));
+                        }                           
                         if (LowestValueStringIndex < 0 || CurrentStringCodeID < LowestStringCodeID)
                         {
                             LowestValueStringIndex = j;

@@ -20,7 +20,7 @@ namespace AltiumTest
             
             // MARK: - creating file of known size
             string FileName = FileManager.WorkPath + "\\out_small.txt";
-            FileManager.CreateFileFromLists(FileName);
+            FileManager.CreateFileFromLists();
             
             // MARK: - timer starts...
             var sWatch = System.Diagnostics.Stopwatch.StartNew();
