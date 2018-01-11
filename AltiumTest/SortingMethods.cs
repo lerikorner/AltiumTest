@@ -17,8 +17,10 @@ namespace AltiumTest
             {
                 if (stbuf != null)
                 {
-                    UInt32 codeid = Convert.ToUInt32(stbuf.Substring(0, stbuf.IndexOf(".")));
-                    string description = stbuf.Substring(stbuf.IndexOf("."), stbuf.Length - stbuf.IndexOf("."));
+                    UInt32 codeid = Convert.ToUInt32(stbuf.Substring(0, 
+                        stbuf.IndexOf(".")));
+                    string description = stbuf.Substring(stbuf.IndexOf("."), 
+                        stbuf.Length - stbuf.IndexOf("."));
                     textrecords.Add(new TextRecord()
                     {
                         CodeID = codeid,
@@ -28,7 +30,8 @@ namespace AltiumTest
             }
 
             // MARK: - sorting by CodeID and Description values
-            IList<TextRecord> TRsorted = textrecords.OrderBy(x => x.CodeID).ThenBy(x => x.Description).ToList();
+            IList<TextRecord> TRsorted = 
+                textrecords.OrderBy(x => x.CodeID).ThenBy(x => x.Description).ToList();
 
             // MARK: - transforming TextRecord to string
             List<string> TRtoString = new List<string>();
@@ -48,8 +51,11 @@ namespace AltiumTest
             {
                 j = i;
                 while ((j > 0) && 
-                    (Convert.ToUInt32(stringBuf[j].Substring(0, stringBuf[j].IndexOf("."))) <
-                    Convert.ToUInt32(stringBuf[j - 1].Substring(0, stringBuf[j - 1].IndexOf(".")))))
+                    (Convert.ToUInt32(stringBuf[j].Substring(0, 
+                    stringBuf[j].IndexOf("."))) 
+                    <
+                    Convert.ToUInt32(stringBuf[j - 1].Substring(0, 
+                    stringBuf[j - 1].IndexOf(".")))))
                 {
                     tmpString = stringBuf[j];
                     stringBuf[j] = stringBuf[j - 1];

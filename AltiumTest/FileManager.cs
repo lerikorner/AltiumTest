@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.Concurrent;
 using System.Linq;
 using System.Threading;
 using System.IO;
@@ -14,7 +13,8 @@ namespace AltiumTest
         public static int StringRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 90000; // MARK: - file size in strings
         public static Int32 SliceSize = 65000; // MARK: - slice size in strings
-        public static ulong TotalRam = new Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
+        public static ulong TotalRam = new 
+            Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
         // MARK: - working directories creating
         public static void CreateWorkingDirs(string path)
@@ -71,7 +71,8 @@ namespace AltiumTest
         }
 
         // MARK: - list to file method, with creating option
-        public static void CreateFileFromListInRAM(string path, List<string>data, bool create)
+        public static void CreateFileFromListInRAM(string path, 
+            List<string>data, bool create)
         {
             if (create)
             {
@@ -98,7 +99,8 @@ namespace AltiumTest
                 else if (FileSize - FilePosition < SliceSize)
                 {
                     FilePosition += FileSize % SliceSize;
-                    StringList = FileManager.StringListRandomizer(FileSize % SliceSize);
+                    StringList = 
+                        FileManager.StringListRandomizer(FileSize % SliceSize);
                     File.AppendAllLines(fileName, StringList);
                 }
                 else
@@ -165,12 +167,14 @@ namespace AltiumTest
         {
             string[] TempPaths = Directory.GetFiles(tempPath, "out_slice*.txt");
             int Slices = TempPaths.Length; // MARK: - slices count
-            int RecordSize = StringRange + UInt32.MaxValue.ToString().Length + 1; // MARK: - max string length
+            int RecordSize = StringRange +
+                UInt32.MaxValue.ToString().Length + 1; // MARK: - max string length
             int Records = FileSize; // MARK: - file size
             Int64 MaxUsage = Convert.ToInt64(TotalRam / 4); // MARK: - RAM volume, cut by 4
             Int64 BufferSize = MaxUsage / Slices; // MARK: - bytes per slice
             double RecordOverHead = 7.5; // MARK: - bytes to strings count
-            int BufferLength = Convert.ToInt32(BufferSize / (RecordSize * RecordOverHead)); // MARK: - records count in queue
+            int BufferLength = Convert.ToInt32(BufferSize / 
+                (RecordSize * RecordOverHead)); // MARK: - records count in queue
 
             List<string> OutputList = new List<string>();
             int StringCounter = 0;
@@ -212,8 +216,10 @@ namespace AltiumTest
                         // MARK: - searching for 1st or lowest value                       
                         if (LowestValueStringIndex >= 0)
                         {
-                            LowestStringCodeID = Convert.ToUInt32(LowestValueString.Substring(0, LowestValueString.IndexOf(".")));
-                            CurrentStringCodeID = Convert.ToUInt32(queues[j].Peek().Substring(0, queues[j].Peek().IndexOf(".")));
+                            LowestStringCodeID = Convert.ToUInt32(LowestValueString.Substring(0, 
+                                LowestValueString.IndexOf(".")));
+                            CurrentStringCodeID = Convert.ToUInt32(queues[j].Peek().Substring(0, 
+                                queues[j].Peek().IndexOf(".")));
                         }                           
                         if (LowestValueStringIndex < 0 || CurrentStringCodeID < LowestStringCodeID)
                         {

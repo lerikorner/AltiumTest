@@ -31,7 +31,9 @@ namespace AltiumTest
             {
                 int counter = FileManager.FileSplit(FileName, fileSize, slicesize);
                 Console.WriteLine("slices count: {0}", counter);            
-                FileManager.MergeByQueues(FileManager.WorkPath+"\\splits\\", FileName, FileManager.WorkPath+"\\out_merged_sorted.txt");
+                FileManager.MergeByQueues(FileManager.WorkPath+"\\splits\\", 
+                    FileName, 
+                    FileManager.WorkPath+"\\out_merged_sorted.txt");
             }
 
             // MARK: - else we just sort file in RAM
@@ -41,7 +43,8 @@ namespace AltiumTest
                string[] stringbuf = File.ReadAllLines(FileName);
 
                 // MARK: - sorting array
-                List<string> trSorted = SortingMethods.TextRecordSortedInStrings(stringbuf.ToList<string>());
+                List<string> trSorted = 
+                    SortingMethods.TextRecordSortedInStrings(stringbuf.ToList<string>());
 
                 // MARK: - writing array to output file
                 FileName = FileManager.WorkPath+"\\out_small_sorted.txt";
