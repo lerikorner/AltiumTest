@@ -67,7 +67,7 @@ namespace AltiumTest
         }
 
         // MARK: - list to file method, with creating option
-        public static void FileFromList(string path, List<string>data, bool create)
+        public static void CreateFileFromListInRAM(string path, List<string>data, bool create)
         {
             if (create)
             {
@@ -76,7 +76,7 @@ namespace AltiumTest
             File.WriteAllLines(path, data);           
         }
 
-        public static void CreateFileFromLists()
+        public static void CreateFileFromListsByAppending()
         {
             int FilePosition = 0;
             List<string> StringList = new List<string>();
@@ -132,7 +132,7 @@ namespace AltiumTest
                     //strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
 
                     // MARK: - filling temp file with sorted list
-                    FileFromList(tempPath, strSlice, true); 
+                    CreateFileFromListInRAM(tempPath, strSlice, true); 
                     strSlice.Clear();
                 }
 
@@ -144,7 +144,7 @@ namespace AltiumTest
                         strSlice.Add(FileToProcess.ReadLine());
                     }
                     strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
-                    FileFromList(tempPath, strSlice, false);
+                    CreateFileFromListInRAM(tempPath, strSlice, false);
                     strSlice.Clear();
                 }
                 return counter + 1;
@@ -167,6 +167,9 @@ namespace AltiumTest
             Int64 BufferSize = MaxUsage / Slices; // MARK: - bytes per slice
             double RecordOverHead = 7.5; // MARK: - bytes to strings count
             int BufferLength = Convert.ToInt32(BufferSize / (RecordSize * RecordOverHead)); // MARK: - records count in queue
+
+            List<string> OutputList = new List<string>();
+            int StringCounter = 0;
                        
             // MARK: - stream readers opening
             StreamReader[] readers = new StreamReader[Slices];
@@ -215,11 +218,24 @@ namespace AltiumTest
                         }                      
                     }
                 }
-                             
+
                 // MARK: - break if we are done 
                 if (LowestValueStringIndex == -1) { done = true; break; }
                 else
                 {
+
+                    // MARK: - strings commented below show alternate method of output file appending.
+                    // MARK: - instead of line-by-line method, we use appending list of strings, to reach less HDD requests.
+
+                    //StringCounter++;
+                    //OutputList.Add(LowestValueString);
+                    //if ((OutputList.Count == FileManager.SliceSize) || (StringCounter == Records))
+                    //{
+                    //    File.AppendAllLines(outPath, OutputList);
+                    //    OutputList.Clear();
+                    //}
+
+
                     // MARK: - output to file
                     sw.WriteLine(LowestValueString);
 
