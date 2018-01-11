@@ -10,7 +10,7 @@ namespace AltiumTest
     // MARK: - files processing
     public class FileManager
     {
-        public static string WorkPath = "c:\\temp"; // MARK: - working dir
+        public static string WorkPath = "f:\\temp"; // MARK: - working dir
         public static int StringRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 90000; // MARK: - file size in strings
         public static Int32 SliceSize = 65000; // MARK: - slice size in strings
@@ -20,8 +20,12 @@ namespace AltiumTest
         public static void CreateWorkingDirs(string path)
         {
             if (!Directory.Exists(path))
-            {               
+            {
                 Directory.CreateDirectory(path);
+            }
+
+            if (!Directory.Exists(path + "\\splits"))
+            {       
                 Directory.CreateDirectory(path + "\\splits");
             }
         }
@@ -29,13 +33,13 @@ namespace AltiumTest
         // MARK: - creating random list
         public static List<string> StringListRandomizer(int length)
         {
-            int codeRandom, descriptionRandom;
+            int codeIDRandom, descriptionRandom;
             Random rndCode = new Random();          
 
             // MARK: - value ranges
-            int codeRangeRight = Int32.MaxValue;
-            int codeRangeLeft = Int32.MinValue;
-            uint codeRandomUInt = 0;
+            int codeIDRangeRight = Int32.MaxValue;
+            int codeIDRangeLeft = Int32.MinValue;
+            uint codeIDRandomUInt = 0;
             int stringRange = StringRange;
 
             //repeaters for CodeID and Description
@@ -46,13 +50,13 @@ namespace AltiumTest
 
             for (Int32 i = 0; i < length; i++)
             {               
-                codeRandom = rndCode.Next(codeRangeLeft, codeRangeRight);
-                codeRandomUInt = (uint)(codeRandom + codeRangeRight);
+                codeIDRandom = rndCode.Next(codeIDRangeLeft, codeIDRangeRight);
+                codeIDRandomUInt = (uint)(codeIDRandom + codeIDRangeRight);
                 descriptionRandom = rndCode.Next(0, stringRange);
                 string desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
 
                 // MARK: - copying strings from time to time
-                if (codeRandom % (descriptionRandom + 1) != 0)
+                if (codeIDRandom % (descriptionRandom + 1) != 0)
                 {
                     copier = desc;
                 }
@@ -60,7 +64,7 @@ namespace AltiumTest
                 {
                     desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom); 
                 }
-                dubcode = codeRandomUInt;
+                dubcode = codeIDRandomUInt;
                 strBlocks.Add(dubcode.ToString() + "." + copier);
             }
             return strBlocks;
