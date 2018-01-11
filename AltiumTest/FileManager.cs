@@ -9,10 +9,10 @@ namespace AltiumTest
     // MARK: - files processing
     public class FileManager
     {
-        public static string WorkPath = "f:\\temp"; // MARK: - working dir
-        public static int StringRange = 1024; // MARK: - max Description size
-        public static Int32 FileSize = 90000; // MARK: - file size in strings
-        public static Int32 SliceSize = 65000; // MARK: - slice size in strings
+        public static string WorkPath = "c:\\temp"; // MARK: - working dir
+        public static int DescriptionRange = 1024; // MARK: - max Description size
+        public static Int32 FileSize = 900000; // MARK: - file size in strings
+        public static Int32 SliceSize = 500000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -40,7 +40,7 @@ namespace AltiumTest
             int codeIDRangeRight = Int32.MaxValue;
             int codeIDRangeLeft = Int32.MinValue;
             uint codeIDRandomUInt = 0;
-            int stringRange = StringRange;
+            int stringRange = DescriptionRange;
 
             //repeaters for CodeID and Description
             string copier = "";
@@ -167,7 +167,7 @@ namespace AltiumTest
         {
             string[] TempPaths = Directory.GetFiles(tempPath, "out_slice*.txt");
             int Slices = TempPaths.Length; // MARK: - slices count
-            int RecordSize = StringRange +
+            int RecordSize = DescriptionRange +
                 UInt32.MaxValue.ToString().Length + 1; // MARK: - max string length
             int Records = FileSize; // MARK: - file size
             Int64 MaxUsage = Convert.ToInt64(TotalRam / 4); // MARK: - RAM volume, cut by 4
