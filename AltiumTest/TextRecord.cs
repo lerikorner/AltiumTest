@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AltiumTest
+namespace BigFileSorting
 {
     // MARK: - TextRecord object, containing CodeID, Description properties 
     // MARK: - Iequatable interface implementation
