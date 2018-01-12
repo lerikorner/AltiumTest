@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace AltiumTest
+namespace BigFileSorting
 {
     // MARK: - sorting methods
     class SortingMethods

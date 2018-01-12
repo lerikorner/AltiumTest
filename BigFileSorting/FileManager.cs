@@ -4,15 +4,15 @@ using System.Linq;
 using System.Threading;
 using System.IO;
 
-namespace AltiumTest
+namespace BigFileSorting
 {
     // MARK: - files processing
     public class FileManager
     {
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
-        public static Int32 FileSize = 900000; // MARK: - file size in strings
-        public static Int32 SliceSize = 500000; // MARK: - slice size in strings
+        public static Int32 FileSize = 90000; // MARK: - file size in strings
+        public static Int32 SliceSize = 50000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -42,7 +42,7 @@ namespace AltiumTest
             uint codeIDRandomUInt = 0;
             int stringRange = DescriptionRange;
 
-            //repeaters for CodeID and Description
+            //MARK: - repeaters for CodeID and Description
             string copier = "";
             UInt32 dubcode = 0;
 

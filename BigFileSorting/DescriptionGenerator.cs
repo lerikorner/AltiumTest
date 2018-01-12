@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Text;
 
-namespace AltiumTest
+namespace BigFileSorting
 {
     public class KeyGenerator
     {

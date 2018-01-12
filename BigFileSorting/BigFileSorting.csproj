@@ -6,8 +6,8 @@
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{CDBE1DA3-ABD9-45F0-9A41-82FEF9401288}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>AltiumTest</RootNamespace>
-    <AssemblyName>AltiumTest</AssemblyName>
+    <RootNamespace>BigFileSorting</RootNamespace>
+    <AssemblyName>BigFileSorting</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -36,7 +36,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>AltiumTest.Program</StartupObject>
+    <StartupObject>BigFileSorting.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Microsoft.VisualBasic" />
