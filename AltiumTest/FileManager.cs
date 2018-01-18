@@ -35,17 +35,13 @@ namespace BigFileSorting
         {
             int codeIDRandom, descriptionRandom;
             Random rndCode = new Random();          
-
-            // MARK: - value ranges
+            
             int codeIDRangeRight = Int32.MaxValue;
             int codeIDRangeLeft = Int32.MinValue;
             uint codeIDRandomUInt = 0;
-            int stringRange = DescriptionRange;
-
-            //MARK: - repeaters for CodeID and Description
+            int stringRange = DescriptionRange;            
             string copier = "";
             UInt32 dubcode = 0;
-
             List<string> strBlocks = new List<string>();
 
             for (Int32 i = 0; i < length; i++)
@@ -54,8 +50,7 @@ namespace BigFileSorting
                 codeIDRandomUInt = (uint)(codeIDRandom + codeIDRangeRight);
                 descriptionRandom = rndCode.Next(0, stringRange);
                 string desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
-
-                // MARK: - copying strings from time to time
+               
                 if (codeIDRandom % (descriptionRandom + 1) != 0)
                 {
                     copier = desc;
@@ -86,8 +81,7 @@ namespace BigFileSorting
             int FilePosition = 0;
             List<string> StringList = new List<string>();
             string fileName = FileManager.WorkPath + "\\out_small.txt";
-
-            // MARK: - appending slices to file, while current position is before output file size
+            
             while (FilePosition < FileSize)
             {
                 if (FileSize % SliceSize == 0)
@@ -136,8 +130,7 @@ namespace BigFileSorting
 
                     // MARK: - nearly sorted file: using Insertion Sort
                     //strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-
-                    // MARK: - filling temp file with sorted list
+                    
                     CreateFileFromListInRAM(tempPath, strSlice, true); 
                     strSlice.Clear();
                 }
@@ -149,6 +142,7 @@ namespace BigFileSorting
                     {
                         strSlice.Add(FileToProcess.ReadLine());
                     }
+
                     strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
                     CreateFileFromListInRAM(tempPath, strSlice, false);
                     strSlice.Clear();
@@ -166,34 +160,30 @@ namespace BigFileSorting
         public static void MergeByQueues(string tempPath, string inPath, string outPath)
         {
             string[] TempPaths = Directory.GetFiles(tempPath, "out_slice*.txt");
-            int Slices = TempPaths.Length; // MARK: - slices count
+            int Slices = TempPaths.Length; 
             int RecordSize = DescriptionRange +
-                UInt32.MaxValue.ToString().Length + 1; // MARK: - max string length
-            int Records = FileSize; // MARK: - file size
-            Int64 MaxUsage = Convert.ToInt64(TotalRam / 4); // MARK: - RAM volume, cut by 4
-            Int64 BufferSize = MaxUsage / Slices; // MARK: - bytes per slice
-            double RecordOverHead = 7.5; // MARK: - bytes to strings count
+                UInt32.MaxValue.ToString().Length + 1;
+            int Records = FileSize; 
+            Int64 MaxUsage = Convert.ToInt64(TotalRam / 4); 
+            Int64 BufferSize = MaxUsage / Slices; 
+            double RecordOverHead = 7.5; 
             int BufferLength = Convert.ToInt32(BufferSize / 
-                (RecordSize * RecordOverHead)); // MARK: - records count in queue
+                (RecordSize * RecordOverHead)); 
 
             List<string> OutputList = new List<string>();
             int StringCounter = 0;
-                       
-            // MARK: - stream readers opening
+                                  
             StreamReader[] readers = new StreamReader[Slices];
             for (int i = 0; i < Slices; i++)
                 readers[i] = new StreamReader(TempPaths[i]);
 
-            // MARK: - queues creating
             Queue<string>[] queues = new Queue<string>[Slices];
             for (int i = 0; i < Slices; i++)
                 queues[i] = new Queue<string>(BufferLength);
 
-            // MARK: - queues loading
             for (int i = 0; i < Slices; i++)
                 LoadQueue(queues[i], readers[i], BufferLength);
 
-            // MARK: - file merge
             StreamWriter sw = new StreamWriter(outPath);
             bool done = false;
             int LowestValueStringIndex, j, progress = 0;
@@ -229,7 +219,6 @@ namespace BigFileSorting
                     }
                 }
 
-                // MARK: - break if we are done 
                 if (LowestValueStringIndex == -1) { done = true; break; }
                 else
                 {
@@ -246,19 +235,15 @@ namespace BigFileSorting
                     //}
 
 
-                    // MARK: - output to file
                     sw.WriteLine(LowestValueString);
 
-                    // MARK: - queue record deleting
                     queues[LowestValueStringIndex].Dequeue();
 
-                    // MARK: - shifting queue 
                     if (queues[LowestValueStringIndex].Count == 0)
                     {
                         LoadQueue(queues[LowestValueStringIndex],
                           readers[LowestValueStringIndex], BufferLength);
 
-                        // MARK: - queues records amount checking
                         if (queues[LowestValueStringIndex].Count == 0)
                         {
                             queues[LowestValueStringIndex] = null;
@@ -268,7 +253,6 @@ namespace BigFileSorting
             }
             sw.Close();
 
-            // MARK: - closing and deleting temporary files
             for (int i = 0; i < Slices; i++)
             {
                 readers[i].Close();

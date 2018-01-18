@@ -28,12 +28,10 @@ namespace BigFileSorting
                     });
                 }                
             }
-
-            // MARK: - sorting by CodeID and Description values
+           
             IList<TextRecord> TRsorted = 
                 textrecords.OrderBy(x => x.CodeID).ThenBy(x => x.Description).ToList();
 
-            // MARK: - transforming TextRecord to string
             List<string> TRtoString = new List<string>();
             foreach (TextRecord trs in TRsorted)
             {
