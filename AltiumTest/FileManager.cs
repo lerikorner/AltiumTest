@@ -12,7 +12,7 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 90000; // MARK: - file size in strings
-        public static Int32 SliceSize = 5000; // MARK: - slice size in strings
+        public static Int32 SliceSize = 80000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -112,7 +112,8 @@ namespace BigFileSorting
             var FileToProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
             int counter = 0;
-            int SliceSortCounter = 0, FileSortCounter=0; //defines Sorting state of file: counts increasing sequences
+            int SliceSortCounter = 0, //defines Sorting state of file: counts increasing sequences in slice
+                FileSortCounter =0; 
             uint pivot = 0, current;
             string tempPath = "";
 
@@ -135,7 +136,7 @@ namespace BigFileSorting
                     }
 
                     // MARK: - random equitable file: using Quick Sort
-                    if (SliceSortCounter < (int)Math.Sqrt(ListSize) * 2)
+                    if (SliceSortCounter < (int)Math.Sqrt(ListSize)/2)
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
                     // MARK: - partly sorted file: using Insertion Sort
