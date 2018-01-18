@@ -12,7 +12,7 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 90000; // MARK: - file size in strings
-        public static Int32 SliceSize = 50000; // MARK: - slice size in strings
+        public static Int32 SliceSize = 5000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -112,6 +112,8 @@ namespace BigFileSorting
             var FileToProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
             int counter = 0;
+            int SliceSortCounter = 0, FileSortCounter=0; //defines Sorting state of file: counts increasing sequences
+            uint pivot = 0, current;
             string tempPath = "";
 
             if (ListSize < FileSize)
@@ -123,14 +125,25 @@ namespace BigFileSorting
                     for (int j = 0; j < ListSize; j++)
                     {
                         strSlice.Add(FileToProcess.ReadLine());
+                        current = Convert.ToUInt32(strSlice[strSlice.Count()-1].Substring(0, strSlice[strSlice.Count()-1].IndexOf(".")));
+
+                        if (current > pivot)
+                        {
+                            pivot = current;
+                            SliceSortCounter++;
+                        }
                     }
 
                     // MARK: - random equitable file: using Quick Sort
-                    strSlice = SortingMethods.TextRecordSortedInStrings(strSlice); 
+                    if (SliceSortCounter < (int)Math.Sqrt(ListSize) * 2)
+                        strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
-                    // MARK: - nearly sorted file: using Insertion Sort
-                    //strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-                    
+                    // MARK: - partly sorted file: using Insertion Sort
+                    else
+                        strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
+
+                    FileSortCounter += SliceSortCounter;
+                    SliceSortCounter = 0;
                     CreateFileFromListInRAM(tempPath, strSlice, true); 
                     strSlice.Clear();
                 }
@@ -146,14 +159,9 @@ namespace BigFileSorting
                     strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
                     CreateFileFromListInRAM(tempPath, strSlice, false);
                     strSlice.Clear();
-                }
-                return counter + 1;
-            }
-            else if (ListSize >= FileSize)
-            {
-                return 1;
-            }
-            else return -1;
+                }              
+            }           
+            return FileSortCounter;
         }
 
         // MARK: - merging with queues

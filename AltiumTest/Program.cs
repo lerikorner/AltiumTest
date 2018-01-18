@@ -29,8 +29,8 @@ namespace BigFileSorting
             // MARK: - if slice size is less than file size, we go with split/external sort/merge procedure
             if (slicesize <fileSize)
             {
-                int counter = FileManager.FileSplit(FileName, fileSize, slicesize);
-                Console.WriteLine("slices count: {0}", counter);            
+                int Scounter = FileManager.FileSplit(FileName, fileSize, slicesize);
+                Console.WriteLine("File sorting state: {0}", Scounter);            
                 FileManager.MergeByQueues(FileManager.WorkPath+"\\splits\\", 
                     FileName, 
                     FileManager.WorkPath+"\\out_merged_sorted.txt");
