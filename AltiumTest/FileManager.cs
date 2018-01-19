@@ -113,6 +113,7 @@ namespace BigFileSorting
             List<string> strSlice = new List<string>();
             int FileCounter = 0;
             int SliceSortCounter = 0, //MARK: - defines Sorting state of file: counts partial increasing sequences in slice
+                                      //SliceSortCounter~=0: File random. SLiceSortCounter~=ListSize: File sorted.
                 FileSortCounter = 0; 
             uint pivot = 0, current, left = 0;
             string tempPath = "";
