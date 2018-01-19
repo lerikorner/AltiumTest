@@ -12,7 +12,7 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 90000; // MARK: - file size in strings
-        public static Int32 SliceSize = 80000; // MARK: - slice size in strings
+        public static Int32 SliceSize = 10000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -111,32 +111,42 @@ namespace BigFileSorting
         {
             var FileToProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
-            int counter = 0;
-            int SliceSortCounter = 0, //defines Sorting state of file: counts increasing sequences in slice
-                FileSortCounter =0; 
-            uint pivot = 0, current;
+            int FileCounter = 0;
+            int SliceSortCounter = 0, //MARK: - defines Sorting state of file: counts partial increasing sequences in slice
+                FileSortCounter = 0; 
+            uint pivot = 0, current, left = 0;
             string tempPath = "";
 
             if (ListSize < FileSize)
             {
-                counter = FileSize / ListSize;
-                for (int i = 0; i < counter; i++)
+                FileCounter = FileSize / ListSize;
+                for (int i = 0; i < FileCounter; i++)
                 {
-                    tempPath = WorkPath+"\\splits\\out_slice" + i + ".txt"; 
+                    tempPath = WorkPath + "\\splits\\out_slice" + i + ".txt";
                     for (int j = 0; j < ListSize; j++)
                     {
                         strSlice.Add(FileToProcess.ReadLine());
-                        current = Convert.ToUInt32(strSlice[strSlice.Count()-1].Substring(0, strSlice[strSlice.Count()-1].IndexOf(".")));
+                        current = Convert.ToUInt32(strSlice[j].Substring(0, strSlice[j].IndexOf(".")));
 
-                        if (current > pivot)
+                        if ( j == 0)
                         {
-                            pivot = current;
+                            left = current;                            
+                        }
+                        else left = Convert.ToUInt32(strSlice[j-1].Substring(0, strSlice[j-1].IndexOf(".")));
+
+                        if (current > left)
+                        {                            
                             SliceSortCounter++;
                         }
+                        else
+                        {                           
+                            SliceSortCounter--;
+                        }                       
                     }
+                    Console.WriteLine(SliceSortCounter);
 
                     // MARK: - random equitable file: using Quick Sort
-                    if (SliceSortCounter < (int)Math.Sqrt(ListSize)/2)
+                    if (SliceSortCounter < ListSize / 4)
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
                     // MARK: - partly sorted file: using Insertion Sort
@@ -151,7 +161,7 @@ namespace BigFileSorting
 
                 if (FileSize % ListSize != 0)
                 {
-                    tempPath = WorkPath+"\\splits\\out_slice" + counter + ".txt";
+                    tempPath = WorkPath+"\\splits\\out_slice" + FileCounter + ".txt";
                     while (FileToProcess.Peek() != -1)
                     {
                         strSlice.Add(FileToProcess.ReadLine());
