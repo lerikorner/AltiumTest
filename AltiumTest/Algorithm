@@ -1,0 +1,19 @@
+This program sorts text file.
+If file size is over RAM (assign max size manually, 
+having in mind, that ex. file contains 100 strings by randomly 0-1024 symbols, its size will be about 50 Kb),
+Program slpits it to slices.
+These slices are sorted by two different algorhitms:
+QUICK SORT (Native LINQ sorting) - when strings are evenly random.
+INSERTION SORT (Custom) - when file is partly sorted.
+To find out State of sorting, program uses variable, which increases with increasing sequences in file, 
+and decrease with cuts of these sequences.
+Maximum value of this variable is file size in strings, which say that file is sorted.
+If value is around 0, we have evenly sorted file.
+If this is below zero and going to negative file size, we have unsorted file, going to be sorted visa versa.
+
+If slicesize is more than file size, program just sorts it in LINQ sort mode.
+
+In case of 2 properties to sort, program creates object TextRecord, to work with 2-parameter sort.
+
+In case of output file could be same bigger than RAM, program uses string-by-string writing.
+Queues technology implemented to increase speed of I/O.
