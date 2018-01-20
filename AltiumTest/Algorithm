@@ -11,7 +11,8 @@ Maximum value of this variable is file size in strings, which say that file is s
 If value is around 0, we have evenly sorted file.
 If this is below zero and going to negative file size, we have unsorted file, going to be sorted visa versa.
 Pivot value of this variable to switch algorytms, 
-  is counted experimentally (corellated with wrong string positions/number of increasing sequences)
+  is counted experimentally (corellated with wrong string positions/number of increasing sequences), but is about 0.99995 of file size.
+Also, if slice is already sorted, insertion sort will run it faster than quicksort.
 
 If slicesize is more than file size, program just sorts it in LINQ sort mode.
 
