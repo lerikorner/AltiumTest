@@ -11,8 +11,8 @@ namespace BigFileSorting
     {
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
-        public static Int32 FileSize = 90000; // MARK: - file size in strings
-        public static Int32 SliceSize = 10000; // MARK: - slice size in strings
+        public static Int32 FileSize = 100000; // MARK: - file size in strings
+        public static Int32 SliceSize = 20000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -29,6 +29,14 @@ namespace BigFileSorting
                 Directory.CreateDirectory(path + "\\splits");
             }
         }
+        public static void DeleteTemporaryDirs(string path)
+        {           
+            if (Directory.Exists(path + "\\splits"))
+            {
+                Directory.Delete(path + "\\splits");
+            }
+        }
+
 
         // MARK: - creating random list
         public static List<string> StringListRandomizer(int length)
@@ -113,7 +121,8 @@ namespace BigFileSorting
             List<string> strSlice = new List<string>();
             int FileCounter = 0;
             int SliceSortCounter = 0, //MARK: - defines Sorting state of file: counts partial increasing sequences in slice
-                                      //SliceSortCounter~=0: File random. SLiceSortCounter~=ListSize: File sorted.
+                                      //SliceSortCounter~=0: File random. SLiceSortCounter~= |ListSize|: File sorted.
+                                      //Number of deviations to switch between modes is: ...
                 FileSortCounter = 0; 
             uint pivot = 0, current, left = 0;
             string tempPath = "";
@@ -135,7 +144,7 @@ namespace BigFileSorting
                         }
                         else left = Convert.ToUInt32(strSlice[j-1].Substring(0, strSlice[j-1].IndexOf(".")));
 
-                        if (current > left)
+                        if (current >= left)
                         {                            
                             SliceSortCounter++;
                         }
@@ -147,7 +156,7 @@ namespace BigFileSorting
                     Console.WriteLine(SliceSortCounter);
 
                     // MARK: - random equitable file: using Quick Sort
-                    if (SliceSortCounter < ListSize / 4)
+                    if (SliceSortCounter < (int)(ListSize * 0.9))
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
                     // MARK: - partly sorted file: using Insertion Sort
