@@ -20,7 +20,7 @@ namespace BigFileSorting
 
             try
             {
-                //FileManager.CreateFileFromListsByAppending();
+                FileManager.CreateFileFromListsByAppending();
                 // MARK: - timer starts...
                 var sWatch = System.Diagnostics.Stopwatch.StartNew();
 
