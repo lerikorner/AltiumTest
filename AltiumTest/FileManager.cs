@@ -148,26 +148,34 @@ namespace BigFileSorting
                         }
                         else
                         {
-                            SequenceList.Add(PartSequenceSize);
-                            Console.WriteLine(SequenceList[SequenceList.Count()-1]);
+                            SequenceList.Add(PartSequenceSize);                          
                             PartSequenceSize = 0;
                         }                       
                     }   
                     
-                    if (SequenceList != null && SequenceList.Max() > 1)
+                    //MARK: - Key Formula in SwitchKEyFormula.jpg
+                    if (SequenceList.Count != 0 && SequenceList.Max() > 1)
                     {
                         Increment = (uint)Math.Log(SequenceList.Max(),SequenceList.Count());
                     }
                     
                     // MARK: - random equitable file: using Quick Sort                  
-                    if (SequenceList != null && Math.Pow(ListSize - SequenceList.Max() , 2) < SequenceList.Max()*Increment)                    
+                    if (SequenceList.Count() != 0 && 
+                        Math.Pow(ListSize - SequenceList.Max() , 2) > SequenceList.Max() * Increment)
+                    {
+                        Console.WriteLine("quick");                       
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
+                    }
 
                     // MARK: - partly sorted file: using Insertion Sort
-                    else 
+                    else
+                    {
                         strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-                                                         
-                    CreateFileFromListInRAM(tempPath, strSlice, true); 
+                        Console.WriteLine("insert");
+                    }
+
+                    CreateFileFromListInRAM(tempPath, strSlice, true);
+                    SequenceList.Clear();
                     strSlice.Clear();
                 }
 
