@@ -12,7 +12,7 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 200000; // MARK: - file size in strings
-        public static Int32 SliceSize = 100000; // MARK: - slice size in strings
+        public static Int32 SliceSize = 50000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -121,7 +121,7 @@ namespace BigFileSorting
             int FileCounter = 0;
             uint PartSequenceSize = 0;                                 
             uint pivot = 0, current, left = 0;
-            uint Increment = 0;
+            double Increment = 0;
             string tempPath = "";
             List<uint> SequenceList = new List<uint>();
 
@@ -156,7 +156,7 @@ namespace BigFileSorting
                     //MARK: - Key Formula in SwitchKEyFormula.jpg
                     if (SequenceList.Count != 0 && SequenceList.Max() > 1)
                     {
-                        Increment = (uint)Math.Log(SequenceList.Max(),SequenceList.Count());
+                        Increment = Math.Log(SequenceList.Max(),SequenceList.Count());
                     }
                     
                     // MARK: - random equitable file: using Quick Sort                  

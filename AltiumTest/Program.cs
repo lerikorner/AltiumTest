@@ -18,7 +18,9 @@ namespace BigFileSorting
 
             try
             {
+                //MARK: - uncomment if file to create. if file created, comment again, and rename file to out_small.txt.
                 //FileManager.CreateFileFromListsByAppending();
+
                 // MARK: - timer starts...
                 var sWatch = System.Diagnostics.Stopwatch.StartNew();
 
