@@ -8,8 +8,6 @@ namespace BigFileSorting
     class Program
     {
         static int slicesize = FileManager.SliceSize;
-
-
         static Int32 filesize = FileManager.FileSize;
 
         public static void Main()
@@ -20,7 +18,7 @@ namespace BigFileSorting
 
             try
             {
-                FileManager.CreateFileFromListsByAppending();
+                //FileManager.CreateFileFromListsByAppending();
                 // MARK: - timer starts...
                 var sWatch = System.Diagnostics.Stopwatch.StartNew();
 

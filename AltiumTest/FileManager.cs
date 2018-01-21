@@ -12,7 +12,7 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 200000; // MARK: - file size in strings
-        public static Int32 SliceSize = 50000; // MARK: - slice size in strings
+        public static Int32 SliceSize = 100000; // MARK: - slice size in strings
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
 
@@ -121,8 +121,7 @@ namespace BigFileSorting
             int FileCounter = 0;
             int PartSequenceSize = 0, //MARK: - defines Sorting state of file: counts partial increasing sequences in slice
                                       //SliceSortCounter~=0: File random. SLiceSortCounter~= |ListSize|: File sorted.
-                                      //Number of deviations to switch between modes is: ...
-                FileSortState = 0,
+                                      //Number of deviations to switch between modes is: ...              
                 SequenceCounter = 1;
             
             uint pivot = 0, current, left = 0;
@@ -155,17 +154,16 @@ namespace BigFileSorting
                             PartSequenceSize--;
                         }                       
                     }
-                    Console.WriteLine((int)(PartSequenceSize + SequenceCounter));
-
+                    Console.WriteLine(PartSequenceSize);
+                    Console.WriteLine(SequenceCounter);
                     // MARK: - random equitable file: using Quick Sort
-                    if (PartSequenceSize < ListSize - SequenceCounter)
+                    if (PartSequenceSize < ListSize - SequenceCounter)                    
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
                     // MARK: - partly sorted file: using Insertion Sort
                     else
                         strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-
-                    FileSortState += PartSequenceSize;
+                    
                     PartSequenceSize = 0;
                     SequenceCounter = 1;
                     CreateFileFromListInRAM(tempPath, strSlice, true); 
