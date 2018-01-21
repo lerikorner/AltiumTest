@@ -119,13 +119,11 @@ namespace BigFileSorting
             var FileToProcess = new StreamReader(path);
             List<string> strSlice = new List<string>();
             int FileCounter = 0;
-            int PartSequenceSize = 0, //MARK: - defines Sorting state of file: counts partial increasing sequences in slice
-                                      //SliceSortCounter~=0: File random. SLiceSortCounter~= |ListSize|: File sorted.
-                                      //Number of deviations to switch between modes is: ...              
-                SequenceCounter = 1;
-            
+            uint PartSequenceSize = 0;                                 
             uint pivot = 0, current, left = 0;
+            uint Increment = 0;
             string tempPath = "";
+            List<uint> SequenceList = new List<uint>();
 
             if (ListSize < FileSize)
             {
@@ -150,22 +148,25 @@ namespace BigFileSorting
                         }
                         else
                         {
-                            SequenceCounter++;
-                            PartSequenceSize--;
+                            SequenceList.Add(PartSequenceSize);
+                            Console.WriteLine(SequenceList[SequenceList.Count()-1]);
+                            PartSequenceSize = 0;
                         }                       
+                    }   
+                    
+                    if (SequenceList != null && SequenceList.Max() > 1)
+                    {
+                        Increment = (uint)Math.Log(SequenceList.Max(),SequenceList.Count());
                     }
-                    Console.WriteLine(PartSequenceSize);
-                    Console.WriteLine(SequenceCounter);
-                    // MARK: - random equitable file: using Quick Sort
-                    if (PartSequenceSize < ListSize - SequenceCounter)                    
+                    
+                    // MARK: - random equitable file: using Quick Sort                  
+                    if (SequenceList != null && Math.Pow(ListSize - SequenceList.Max() , 2) < SequenceList.Max()*Increment)                    
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
 
                     // MARK: - partly sorted file: using Insertion Sort
-                    else
+                    else 
                         strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-                    
-                    PartSequenceSize = 0;
-                    SequenceCounter = 1;
+                                                         
                     CreateFileFromListInRAM(tempPath, strSlice, true); 
                     strSlice.Clear();
                 }
