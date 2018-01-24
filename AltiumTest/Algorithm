@@ -7,11 +7,21 @@ QUICK SORT (Native LINQ sorting) - when strings are evenly random.
 INSERTION SORT (Custom) - when file is partly sorted.
 To find out State of sorting, program uses variable, which increases with increasing sequences in file, 
 and decrease with cuts of these sequences.
-Maximum value of this variable is file size in strings, which say that file is sorted.
+Maximum value of this variable is file size in strings, which says that file is sorted.
 If value is around 0, we have evenly sorted file.
-If this is below zero and going to negative file size, we have unsorted file, going to be sorted visa versa.
 Pivot value of this variable to switch algorytms, 
-  is counted experimentally (corellated with wrong string positions/number of increasing sequences).
+  is counted experimentally (corellated with wrong string positions/number of increasing sequences):
+  
+  
+  Running formula: 
+  x * log (x) > (C - x) ^ 2, where
+  C == File/List size in strings
+  base of log == number of increasing sequences in list/file
+  x == switcher between algotytms, equaling size of major increasing sequence in list/file.
+  
+This formula shows moment between two sorting algorytms, when difficulty of quicksort is more than insertion sort.
+  
+  
 Also, if slice is already sorted, insertion sort will run it faster than quicksort.
 
 If slicesize is more than file size, program just sorts it in LINQ sort mode.
