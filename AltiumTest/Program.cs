@@ -14,7 +14,7 @@ namespace BigFileSorting
         {
     
             FileManager.CreateWorkingDirs(FileManager.WorkPath);           
-            string FileName = FileManager.WorkPath + "\\out_small.txt";
+            string FileName = FileManager.WorkPath + "\\" + FileManager.InputFileName;
 
             try
             {

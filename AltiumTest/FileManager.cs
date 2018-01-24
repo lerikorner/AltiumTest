@@ -10,6 +10,7 @@ namespace BigFileSorting
     public class FileManager
     {
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
+        public static string InputFileName = "out_small.txt"; //MARK: - modify to run tests.
         public static int DescriptionRange = 1024; // MARK: - max Description size
         public static Int32 FileSize = 200000; // MARK: - file size in strings
         public static Int32 SliceSize = 50000; // MARK: - slice size in strings
@@ -87,7 +88,7 @@ namespace BigFileSorting
         {
             int FilePosition = 0;
             List<string> StringList = new List<string>();
-            string fileName = FileManager.WorkPath + "\\out_small.txt";
+            string fileName = FileManager.WorkPath + "\\" + InputFileName;
             
             while (FilePosition < FileSize)
             {
@@ -162,8 +163,7 @@ namespace BigFileSorting
                     // MARK: - random equitable file: using Quick Sort                  
                     if (SequenceList.Count() != 0 && 
                         Math.Pow(ListSize - SequenceList.Max() , 2) > SequenceList.Max() * Increment)
-                    {
-                        Console.WriteLine("quick");                       
+                    {                      
                         strSlice = SortingMethods.TextRecordSortedInStrings(strSlice);
                     }
 
@@ -171,7 +171,6 @@ namespace BigFileSorting
                     else
                     {
                         strSlice = SortingMethods.TRSortedtoStringsByInserts(strSlice);
-                        Console.WriteLine("insert");
                     }
 
                     CreateFileFromListInRAM(tempPath, strSlice, true);
