@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Diagnostics;
 
 namespace BigFileSorting
 {
@@ -11,13 +12,12 @@ namespace BigFileSorting
         static Int32 filesize = FileManager.FileSize;
 
         public static void Main()
-        {
-    
-            FileManager.CreateWorkingDirs(FileManager.WorkPath);           
-            string FileName = FileManager.WorkPath + "\\" + FileManager.InputFileName;
-
+        {                       
+            string FileName = FileManager.WorkPath + "\\" + FileManager.InputFileName;         
             try
             {
+                FileManager.CreateWorkingDirs(FileManager.WorkPath);
+
                 //MARK: - uncomment if file to create. if file created, comment again, and rename file to out_small.txt.
                 //FileManager.CreateFileFromListsByAppending();
 
@@ -47,13 +47,13 @@ namespace BigFileSorting
                 sWatch.Stop();
                 Console.WriteLine("time spent: {0}", sWatch.Elapsed);
                 Console.WriteLine("strings in file: {0}", FileManager.FileSize);
+                FileManager.DeleteTemporaryDirs(FileManager.WorkPath);
             }
+
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
             }
-
-            FileManager.DeleteTemporaryDirs(FileManager.WorkPath);
             Console.ReadKey();           
         }
     }

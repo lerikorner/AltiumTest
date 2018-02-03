@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.IO;
+using System.Diagnostics;
 
 namespace BigFileSorting
 {
@@ -141,6 +142,39 @@ namespace BigFileSorting
 
             TammyGlobal.Add(line);
             reader.BaseStream.Seek(0, SeekOrigin.Begin);
+        }
+        //Loading list to RAM, until getting maximum capacity
+        public static void GetMaxRAMListSize()
+        {
+            List<string> TestList = new List<string>();
+            try
+            {
+                while (true)
+                {
+                    TestList.Add(KeyGenerator.GetUniqueKeySimply(1024));
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("maximum strings in RAM list: {0}", TestList.Count);
+            }
+
+        }
+
+        // Getting max memory for process
+        public static void GetMaxVirtualMemory(string app)
+        {
+            try
+            {
+                Process process = Process.Start(app);
+                Console.WriteLine("process memory size: {0}", process.PagedMemorySize64);
+                process.CloseMainWindow();
+                process.Close();
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error: {0}", ex);
+            }
         }
     }
 }

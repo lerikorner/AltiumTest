@@ -12,10 +12,12 @@ namespace BigFileSorting
         public static string WorkPath = "c:\\temp"; // MARK: - working dir
         public static string InputFileName = "out_small.txt"; //MARK: - modify to run tests.
         public static int DescriptionRange = 1024; // MARK: - max Description size
-        public static Int32 FileSize = 200000; // MARK: - file size in strings
-        public static Int32 SliceSize = 50000; // MARK: - slice size in strings
+        public static Int32 FileSize = 8000000; // MARK: - file size in strings       
         public static ulong TotalRam = new 
             Microsoft.VisualBasic.Devices.ComputerInfo().TotalPhysicalMemory; // MARK: - RAM volume
+        public static ulong TotalPagedRam = new
+            Microsoft.VisualBasic.Devices.ComputerInfo().TotalVirtualMemory; // MARK: - Virtual memory volume
+        public static Int32 SliceSize = (int) (TotalPagedRam / (1024 * 4)); // MARK: - slice size in strings
 
         // MARK: - working directories creating
         public static void CreateWorkingDirs(string path)
@@ -38,6 +40,7 @@ namespace BigFileSorting
             }
         }
 
+        
 
         // MARK: - creating random list
         public static List<string> StringListRandomizer(int length)
@@ -49,7 +52,9 @@ namespace BigFileSorting
             uint codeIDRandomUInt = 0;
             int stringRange = DescriptionRange;            
             string copier = "";
+            string desc = "";
             UInt32 dubcode = 0;
+
             List<string> strBlocks = new List<string>();
 
             for (Int32 i = 0; i < length; i++)
@@ -57,7 +62,7 @@ namespace BigFileSorting
                 codeIDRandom = rndCode.Next(codeIDRangeLeft, codeIDRangeRight);
                 codeIDRandomUInt = (uint)(codeIDRandom + codeIDRangeRight);
                 descriptionRandom = rndCode.Next(0, stringRange);
-                string desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
+                desc = KeyGenerator.GetUniqueKeySimply(descriptionRandom);
                
                 if (codeIDRandom % (descriptionRandom + 1) != 0)
                 {

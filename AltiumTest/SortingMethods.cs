@@ -12,6 +12,7 @@ namespace BigFileSorting
         {
             // MARK: - transforming strings to TextRecord objects
             List<TextRecord> textrecords = new List<TextRecord>();
+            string description = "";
 
             foreach (string stbuf in stringBuf)
             {
@@ -19,7 +20,7 @@ namespace BigFileSorting
                 {
                     UInt32 codeid = Convert.ToUInt32(stbuf.Substring(0, 
                         stbuf.IndexOf(".")));
-                    string description = stbuf.Substring(stbuf.IndexOf("."), 
+                    description = stbuf.Substring(stbuf.IndexOf("."), 
                         stbuf.Length - stbuf.IndexOf("."));
                     textrecords.Add(new TextRecord()
                     {
