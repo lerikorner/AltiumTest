@@ -19,7 +19,7 @@ namespace BigFileSorting
                 FileManager.CreateWorkingDirs(FileManager.WorkPath);
 
                 //MARK: - uncomment if file to create. if file created, comment again, and rename file to out_small.txt.
-                //FileManager.CreateFileFromListsByAppending();
+                FileManager.CreateFileFromListsByAppending();
 
                 // MARK: - timer starts...
                 var sWatch = System.Diagnostics.Stopwatch.StartNew();
@@ -49,11 +49,11 @@ namespace BigFileSorting
                 Console.WriteLine("strings in file: {0}", FileManager.FileSize);
                 FileManager.DeleteTemporaryDirs(FileManager.WorkPath);
             }
-
             catch (Exception ex)
             {
                 Console.WriteLine("ERROR: " + ex.Message);
             }
+
             Console.ReadKey();           
         }
     }

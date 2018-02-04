@@ -39,9 +39,7 @@ namespace BigFileSorting
                 Directory.Delete(path + "\\splits");
             }
         }
-
         
-
         // MARK: - creating random list
         public static List<string> StringListRandomizer(int length)
         {
@@ -56,7 +54,6 @@ namespace BigFileSorting
             UInt32 dubcode = 0;
 
             List<string> strBlocks = new List<string>();
-
             for (Int32 i = 0; i < length; i++)
             {               
                 codeIDRandom = rndCode.Next(codeIDRangeLeft, codeIDRangeRight);
